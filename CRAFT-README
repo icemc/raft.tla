@@ -1,0 +1,13 @@
+• No new messages 
+• New component switch 
+• No distinction between messages, payload and metadata are considered same
+• Followers can now respond to client
+• Leader Sends Metadata to followers after receiving request to tell which follower should respond to client
+• Followers responds to Leader when it receives order message from Leader but it checks if it has received the payload earlier from the switch
+• switch keeps it's own log
+
+1. Switch sends payload to every follower including reader
+2. Leader prepares metadata and Sends to followers
+3. Follower upon receiving the metada checks if client exists in switch (ordered or unordered ?), it received the payload and if all checks are passed then it commits to the leader
+4. Define similar function to receive (i, n) where Entry has a new field called payload
+5. Define Client request for switch function which initiates 4 client request for the system
