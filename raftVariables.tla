@@ -64,8 +64,13 @@ VARIABLE nextIndex
 VARIABLE matchIndex
 leaderVars == <<nextIndex, matchIndex>>
 
+\* Switch cache containing all RPC messages sent from Switch to Servers including Leader
+VARIABLE switchCache
+
+switchVars == <<switchCache>>
+
 \* All variables; used for stuttering (asserting state hasn't changed).
-vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars>>
+vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, switchVars>>
 
 =============================================================================
 \* Created by Ovidiu-Cristian Marcu

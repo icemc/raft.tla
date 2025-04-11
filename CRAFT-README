@@ -11,3 +11,25 @@
 3. Follower upon receiving the metada checks if client exists in switch (ordered or unordered ?), it received the payload and if all checks are passed then it commits to the leader
 4. Define similar function to receive (i, n) where Entry has a new field called payload
 5. Define Client request for switch function which initiates 4 client request for the system
+
+
+
+---------------------------------------------------------------------------------------------
+
+09/04/2025
+
+Added 
+
+\* Switch cache containing all RPC messages sent from Switch to Servers including Leader
+VARIABLE switchCache
+
+switchVars == <<switchCache>>
+
+Modified ClientRequest to implicitly serve as switch and forward incoming requests to all servers including leading by appending entries to switchCache[s] where s is the server and switchCache[s] is the Seq of requests sent from switch to server s  
+
+Modified AppendEntries to send appendEntries message containing only metadata from Leader to follower
+
+Modified HandleAppendEntriesRequest to check if follower received request from switch and also checking if incoming entry matches a request before adding it to followers log (including payload)
+
+
+TODO: Implement recovery mechanism in case entry sent through HandleAppendEntriesRequest is not found in request sent by switch to server i
