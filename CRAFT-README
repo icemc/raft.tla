@@ -20,12 +20,12 @@
 
 Added 
 
-\* Switch cache containing all RPC messages sent from Switch to Servers including Leader
-VARIABLE switchCache
+\* Server cache containing all requests sent from Switch to Servers including Leader
+VARIABLE serverRequestCache
 
-switchVars == <<switchCache>>
+requestVars == <<serverRequestCache>>
 
-Modified ClientRequest to implicitly serve as switch and forward incoming requests to all servers including leading by appending entries to switchCache[s] where s is the server and switchCache[s] is the Seq of requests sent from switch to server s  
+Modified ClientRequest to implicitly serve as switch and forward incoming requests to all servers including leading by appending entries to serverRequestCache[s] where s is the server and serverRequestCache[s] is the Seq of requests sent from switch to server s  
 
 Modified AppendEntries to send appendEntries message containing only metadata from Leader to follower
 
@@ -33,3 +33,49 @@ Modified HandleAppendEntriesRequest to check if follower received request from s
 
 
 TODO: Implement recovery mechanism in case entry sent through HandleAppendEntriesRequest is not found in request sent by switch to server i
+
+
+-----------------------------------------------------------------------
+
+13/04/2025 
+
+Added new invariant to check if followers are able to append entries
+
+FollowerAppendsEntry == \E i \in Server : state[i] = Follower /\ Len(log[i]) = 1 \* Verifies that at least one follower appends an entry
+
+------------------------------------------------------------------------
+
+14/04/2025 
+
+Fixed bug in HandleAppendEntriesRequest function that caused followers not to append entries
+
+changed: IN log' = IF    entries /= << >> THEN log
+to: IN log' = IF    entries = << >> THEN log
+
+This made the implementation to work as intended
+
+
+-----------------------------------------------------------------------------
+
+16/04/2025 
+
+Separation of concerns
+
+1. Refactored ClientRequest to now only serve as switch and forward requests to every server
+2. Added LeaderReceivesRequest function which adds received requests to leader log and mark entry as not committed
+3. Updated MyNext & Next to reflect the changes made above
+
+------------------------------------------------------------------------------
+
+18/04/2025
+
+Added Recovery mechanisms
+
+1. Implemented HandleRecoveryRequest function which enables leader to add lost request to followers requestCache
+2. Follower now sends RecoveryRequest message to leader if it can't find request in it's cache during HandleAppendEntriesRequest call
+3. Added possibility to handle RecoveryRequest type messages in Receive function in raftSpec.tla
+
+Refactor code
+
+1. Renamed switchCache to serverRequestCache
+2. Renamed switchVars to requestVars
