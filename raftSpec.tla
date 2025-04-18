@@ -33,7 +33,8 @@ Next ==
 \*           \/ \E i \in Server : Restart(i)
            \/ \E i,j \in Server : i /= j /\ RequestVote(i, j)
            \/ \E i \in Server : BecomeLeader(i)
-           \/ \E i \in Server, v \in Value : state[i] = Leader /\ ClientRequest(i, v)
+           \/ \E v \in Value : ClientRequest(v)
+           \/ \E i \in Server, v \in Value : state[i] = Leader /\ LeaderReceivesRequest(i, v)
            \/ \E i \in Server : AdvanceCommitIndex(i)
            \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
@@ -48,7 +49,8 @@ MyNext ==
 \*           \/ \E i \in Server : Restart(i)
 \*           \/ \E i,j \in Server : i /= j /\ RequestVote(i, j)
 \*           \/ \E i \in Server : BecomeLeader(i)
-           \/ \E i \in Server, v \in Value : state[i] = Leader /\ ClientRequest(i, v)
+           \/ \E v \in Value : ClientRequest(v)
+           \/ \E i \in Server, v \in Value : state[i] = Leader /\ LeaderReceivesRequest(i, v)
            \/ \E i \in Server : AdvanceCommitIndex(i)
            \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages

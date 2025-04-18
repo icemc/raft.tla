@@ -124,54 +124,50 @@ DropStaleResponse(i, j, m) ==
 
 \***************************** AppendEntries **********************************************
 
-\* Modified. Leader i receives a client request to add v to the log. up to MaxClientRequests.
-(* ClientRequest(i, v) ==
-    /\ state[i] = Leader
+\* Modified. Switch receives a client request to foward to leader and other followers. up to MaxClientRequests.
+ClientRequest(v) ==
+    /\ \E i \in Server : state[i] = Leader
     /\ maxc < MaxClientRequests 
-    /\ LET entryTerm == currentTerm[i]
-           entry == [term |-> entryTerm, value |-> v]
-           entryExists == \E j \in DOMAIN log[i] : log[i][j].value = v /\ log[i][j].term = entryTerm
-           newLog == IF entryExists THEN log[i] ELSE Append(log[i], entry)
-           newEntryIndex == Len(log[i]) + 1
-           newEntryKey == <<newEntryIndex, entryTerm>>
+    /\ LET 
+           leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
+           entryTerm == currentTerm[leader] \* Get current term of Leader
+           entry == [term |-> entryTerm, value |-> v, payload |-> v]
+           entryExists == 
+\*           \E j \in DOMAIN log[leader]: log[leader][j].value = v /\ log[leader][j].term = entryTerm /\ log[leader][j].payload = v
+               \* Check if entry has previously been sent
+               \E s \in Server:
+                    \E j \in DOMAIN switchCache[s]: 
+                        switchCache[s][j].value = v 
+                        /\ switchCache[s][j].term = entryTerm 
+                        /\ switchCache[s][j].payload = v
+           
        IN
-        /\ log' = [log EXCEPT ![i] = newLog]
         /\ maxc' = IF entryExists THEN maxc ELSE maxc + 1
-        /\ entryCommitStats' =
-              IF ~entryExists /\ newEntryIndex > 0 \* Only add stats for truly new entries
-              THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ])
-              ELSE entryCommitStats
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount>>
-*)
-    
-\* Modified. Switch receives a client request to foward to leader i and other followers. up to MaxClientRequests.
-\* Implicitly adding new entry to Leader log and fowarding the request to the followers. In a real system we would also foward the request to the Leader and let it do the processing
-ClientRequest(i, v) ==
+        \* Foward request to all Servers.
+        /\ switchCache' = IF entryExists THEN switchCache ELSE [s \in Server |-> Append(switchCache[s], entry)] 
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats>>
+
+\* Leader Receives request from switch and appends it to its log
+LeaderReceivesRequest(i, v) == 
     /\ state[i] = Leader
-    /\ maxc < MaxClientRequests 
     /\ LET entryTerm == currentTerm[i]
            entry == [term |-> entryTerm, value |-> v, payload |-> v]
-           entryExists == \E j \in DOMAIN log[i] : log[i][j].value = v /\ log[i][j].term = entryTerm
-           newLog == IF entryExists THEN log[i] ELSE Append(log[i], entry)
+           entryReceived == \E j \in DOMAIN switchCache[i] : switchCache[i][j].value = v /\ switchCache[i][j].term = entryTerm /\ switchCache[i][j].payload = v
+           newLog == IF entryReceived THEN Append(log[i], entry) ELSE log[i]
            newEntryIndex == Len(log[i]) + 1
            newEntryKey == <<newEntryIndex, entryTerm>>
        IN
         /\ log' = [log EXCEPT ![i] = newLog]
-        /\ maxc' = IF entryExists THEN maxc ELSE maxc + 1
         /\ entryCommitStats' =
-              IF ~entryExists /\ newEntryIndex > 0 \* Only add stats for truly new entries
+              IF entryReceived /\ newEntryIndex > 0 \* Only add stats for truly new entries
               THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ])
               ELSE entryCommitStats
-        \* Foward request to all Servers. However entry is already added to Leaders log (though not commited).
-        \* This simulates the fact that the Leader has already received the request and added it to its log, while followers are still to add it to their log
-        /\ switchCache' = [s \in Server |-> Append(switchCache[s], entry)] 
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount>>
- 
-
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount, maxc, switchVars>>
+    
 \* Modified. Leader i sends j an AppendEntries request containing exactly 1 entry. It was up to 1 entry.
 \* While implementations may want to send more than 1 at a time, this spec uses
 \* just 1 because it minimizes atomic regions without loss of generality.
-AppendEntries(i, j) ==
+AppendEntries(i, j) ==  
     /\ i /= j
     /\ state[i] = Leader
     /\ Len(log[i]) > 0  \* Only proceed if the leader has entries to send
@@ -187,12 +183,7 @@ AppendEntries(i, j) ==
            prevLogTerm == IF prevLogIndex > 0 THEN
                               log[i][prevLogIndex].term
                           ELSE 0
-                          
-           \* Send up to 1 entry, constrained by the end of the log.
-           \* lastEntry == Min({Len(log[i]), nextIndex[i][j]})
-           \* entries == SubSeq(log[i], nextIndex[i][j], lastEntry)
-           
-       IN Send([mtype          |-> AppendEntriesRequest,
+           message == [mtype          |-> AppendEntriesRequest,
                 mterm          |-> currentTerm[i],
                 mprevLogIndex  |-> prevLogIndex,
                 mprevLogTerm   |-> prevLogTerm,
@@ -200,14 +191,23 @@ AppendEntries(i, j) ==
                 
                 \* mlog is used as a history variable for the proof.
                 \* It would not exist in a real implementation.
-                mlog           |-> log[i],
+\*                mlog           |-> log[i],
                 mcommitIndex   |-> Min({commitIndex[i], entryIndex}), \* lastEntry}),
                 msource        |-> i,
-                mdest          |-> j])
-       /\ entryCommitStats' =
-            IF entryKey \in DOMAIN entryCommitStats /\ ~entryCommitStats[entryKey].committed
-            THEN [entryCommitStats EXCEPT ![entryKey].sentCount = @ + 1]
-            ELSE entryCommitStats         
+                mdest          |-> j]
+                          
+           \* Send up to 1 entry, constrained by the end of the log.
+           \* lastEntry == Min({Len(log[i]), nextIndex[i][j]})
+           \* entries == SubSeq(log[i], nextIndex[i][j], lastEntry)
+           
+       IN   
+            Send(message) 
+            /\ entryCommitStats' =
+                IF entryKey \in DOMAIN entryCommitStats 
+                    /\ ~entryCommitStats[entryKey].committed 
+\*                    /\ ~(message \in DOMAIN messages)
+                THEN [entryCommitStats EXCEPT ![entryKey].sentCount = @ + 1]
+                ELSE entryCommitStats         
     /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, maxc, leaderCount, switchVars>>
 
 \* Server i receives an AppendEntries request from server j with
@@ -278,12 +278,24 @@ HandleAppendEntriesRequest(i, j, m) ==
 \*                                          log[i][index2]]
 \*                          IN log' = [log EXCEPT ![i] = new]
                        /\ UNCHANGED <<serverVars, commitIndex, messages>>
+                       
+                   \/ \* no conflict but server i didn't receive request from switch. Send recovery message to Server j
+                       /\ m.mentries /= << >>
+                       /\ ~(\E k \in DOMAIN switchCache[i] :  m.mentries[1].term = switchCache[i][k].term /\ m.mentries[1].value = switchCache[i][k].value)
+                       /\ LET message == [mtype     |-> RecoveryRequest,
+                                          mterm          |-> currentTerm[i],
+                                          mentries       |-> m.mentries,
+                                          msource         |-> i,
+                                          mdest           |-> j]
+                          IN Send(message)
+                       /\ UNCHANGED <<serverVars, commitIndex, log>>
+                       
                    \/ \* no conflict: append entry
                        /\ m.mentries /= << >>
                        /\ \E k \in DOMAIN switchCache[i] :  m.mentries[1].term = switchCache[i][k].term /\ m.mentries[1].value = switchCache[i][k].value 
                        /\ Len(log[i]) = m.mprevLogIndex
                        /\ LET entries == SelectSeq(switchCache[i], LAMBDA entry: entry.term = m.mentries[1].term /\ entry.value = m.mentries[1].value)
-                          IN log' = IF    entries /= << >> THEN log \* NO RPC was sent from switch to Server i with these values 
+                          IN log' = IF    entries = << >> THEN log \* NO RPC was sent from switch to Server i with these values 
                                     ELSE  [log EXCEPT ![i] = Append(log[i], Head(entries))] \* Add this entry to log, this includes the payload
                        /\ UNCHANGED <<serverVars, commitIndex, messages>>
        /\ UNCHANGED <<candidateVars, leaderVars, instrumentationVars, switchVars>> \* entryCommitStats unchanged on followers
@@ -314,6 +326,18 @@ HandleAppendEntriesResponse(i, j, m) ==
           /\ UNCHANGED <<matchIndex, entryCommitStats>>
     /\ Discard(m)
     /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, switchVars>>
+
+\* Server i receives RecoveryRequest message from server j
+HandleRecoveryRequest(i, j, m) ==
+    /\ m.mterm = currentTerm[i]
+    /\ m.mtype = RecoveryRequest
+    /\ m.mentries /= << >>
+    /\ LET  entries == SelectSeq(switchCache[i], LAMBDA entry: entry.term = m.mentries[1].term /\ entry.value = m.mentries[1].value)
+       IN   Discard(m)
+            /\ switchCache' = IF entries = << >> THEN switchCache ELSE [switchCache EXCEPT ![j] = Append(switchCache[j], Head(entries))]
+       
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, instrumentationVars>>
+
 
 \* Leader i advances its commitIndex.
 \* This is done as a separate step from handling AppendEntries responses,
