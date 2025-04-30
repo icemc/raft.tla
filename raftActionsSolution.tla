@@ -143,8 +143,8 @@ ClientRequest(v) ==
 
 \* Switch sends NewSwitchRequest message to a single server
 SwitchSendRequest(r, j) == 
-    /\ \E entry \in DOMAIN switchRequests: r.term = entry.term /\ r.value = entry.value /\ r.payload = entry.payload
-    /\ ~(\E s \in DOMAIN switchRequests[r]: s = j)
+    /\ \E entry \in DOMAIN switchRequests: entry = r
+    /\ ~(\E i \in DOMAIN switchRequests[r]: switchRequests[r][i] = j)
     /\ LET leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
            entryTerm == currentTerm[leader] \* Get current term of Leader
             msg == 
@@ -309,6 +309,9 @@ HandleAppendEntriesRequest(i, j, m) ==
                        
                    \/ \* no conflict but server i didn't receive request from switch. Send recovery message to Server j
                        /\ m.mentries /= << >>
+                       \* Check if switch has already sent request but hasn't been consumed yet. If true wait for this message to be consumed. We basically stall if true
+                       /\ ~(\E r \in DOMAIN switchRequests: \E s \in DOMAIN switchRequests[r]: m.mentries[1].term = r.term /\ m.mentries[1].value = r.value /\ switchRequests[r][s] = i)
+                       \* /\ \E i \in DOMAIN messages : i.mtype = NewSwitchRequest /\ i.mterm = m.mentries[0].mterm /\ i.mentries[0].mterm = m.mentries[0].mterm
                        /\ ~(\E k \in DOMAIN serverRequestCache[i] :  m.mentries[1].term = serverRequestCache[i][k].term /\ m.mentries[1].value = serverRequestCache[i][k].value)
                        /\ LET message == [mtype     |-> RecoveryRequest,
                                           mterm          |-> currentTerm[i],

@@ -44,6 +44,8 @@ LeaderCommitted ==
     
 FollowersAppendEntry == \E i,j \in Server : i /= j /\ state[i] = Follower /\ state[j] = Follower /\ Len(log[i]) = 1 /\ Len(log[j]) = 1 \* Verifies that at least one follower appends an entry
 
+ServersAppendEntry == \E i \in Server: Len(log[i]) = 0
+
 MessageSent == messages = <<>>
 
 \*Modify LeaderCommited == \E i \in Server : commitIndex[i] /= 1
