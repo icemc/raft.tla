@@ -132,27 +132,55 @@ ClientRequest(v) ==
            leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
            entryTerm == currentTerm[leader] \* Get current term of Leader
            entry == [term |-> entryTerm, value |-> v, payload |-> v]
-           entryExists == 
-\*           \E j \in DOMAIN log[leader]: log[leader][j].value = v /\ log[leader][j].term = entryTerm /\ log[leader][j].payload = v
-               \* Check if entry has previously been sent
-               \E s \in Server:
-                    \E j \in DOMAIN serverRequestCache[s]: 
-                        serverRequestCache[s][j].value = v 
-                        /\ serverRequestCache[s][j].term = entryTerm 
-                        /\ serverRequestCache[s][j].payload = v
+           entryExists == \E r \in DOMAIN switchRequests: r.term = entry.term /\ r.value = entry.value /\ r.payload = entry.payload
            
        IN
-        /\ maxc' = IF entryExists THEN maxc ELSE maxc + 1
-        \* Foward request to all Servers.
-        /\ serverRequestCache' = IF entryExists THEN serverRequestCache ELSE [s \in Server |-> Append(serverRequestCache[s], entry)] 
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats>>
+           IF ~entryExists THEN
+            /\ maxc' = maxc + 1
+            /\ switchRequests' = switchRequests @@ (entry :> <<>>)
+           ELSE UNCHANGED <<maxc, switchRequests>>
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats, serverRequestCache>>
 
+\* Switch sends NewSwitchRequest message to a single server
+SwitchSendRequest(r, j) == 
+    /\ \E entry \in DOMAIN switchRequests: r.term = entry.term /\ r.value = entry.value /\ r.payload = entry.payload
+    /\ ~(\E s \in DOMAIN switchRequests[r]: s = j)
+    /\ LET leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
+           entryTerm == currentTerm[leader] \* Get current term of Leader
+            msg == 
+                    [mtype      |-> NewSwitchRequest,
+                    mterm       |-> entryTerm,
+                    mentries    |-> <<r>>, \* A sequence containing a single request
+                    msource     |-> Switch,
+                    mdest       |-> j]
+                
+       IN  /\ Send(msg)
+           /\ switchRequests' = [switchRequests EXCEPT ![r] = Append(switchRequests[r], j)]
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, serverRequestCache>>
+
+\* Switch sends NewSwitchRequest message to all servers
+SwitchBroadcastRequest(r) == 
+    /\ \E entry \in DOMAIN switchRequests: entry = r
+    /\ LET  leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
+            entryTerm == currentTerm[leader] \* Get current term of Leader
+            serverSeq == SetToSeq(Server)
+            msgs == [s \in 1..Len(serverSeq)  |->       [mtype      |-> NewSwitchRequest,
+                                                        mterm       |-> entryTerm,
+                                                        mentries    |-> <<r>>, \* A sequence containing a single request
+                                                        msource     |-> Switch,
+                                                        mdest       |-> serverSeq[s]]]
+                                            
+       IN   
+            /\ SendMultiple(msgs)
+            /\ switchRequests' = [switchRequests EXCEPT ![r] = serverSeq]
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, serverRequestCache>>
+   
 \* Leader Receives request from switch and appends it to its log
-LeaderReceivesRequest(i, v) == 
+LeaderReceivedRequest(i, r) == 
     /\ state[i] = Leader
     /\ LET entryTerm == currentTerm[i]
-           entry == [term |-> entryTerm, value |-> v, payload |-> v]
-           entryReceived == \E j \in DOMAIN serverRequestCache[i] : serverRequestCache[i][j].value = v /\ serverRequestCache[i][j].term = entryTerm /\ serverRequestCache[i][j].payload = v
+           entry == r           
+           entryReceived == \E j \in DOMAIN serverRequestCache[i] : r = serverRequestCache[i][j]
            newLog == IF entryReceived THEN Append(log[i], entry) ELSE log[i]
            newEntryIndex == Len(log[i]) + 1
            newEntryKey == <<newEntryIndex, entryTerm>>
@@ -163,7 +191,7 @@ LeaderReceivesRequest(i, v) ==
               THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ])
               ELSE entryCommitStats
     /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount, maxc, requestVars>>
-    
+        
 \* Modified. Leader i sends j an AppendEntries request containing exactly 1 entry. It was up to 1 entry.
 \* While implementations may want to send more than 1 at a time, this spec uses
 \* just 1 because it minimizes atomic regions without loss of generality.
@@ -327,16 +355,29 @@ HandleAppendEntriesResponse(i, j, m) ==
     /\ Discard(m)
     /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, requestVars>>
 
+\* Server i receives an NewSwitchRequest message request from j(switch)
+HandleNewSwitchRequest(i, j, m) == 
+    /\ i /= j
+    /\ j = Switch
+    /\ m.mtype = NewSwitchRequest
+    /\ m.msource = Switch
+    /\ m.mentries /= <<>>
+    /\ serverRequestCache' = [serverRequestCache EXCEPT ![i] = Append(serverRequestCache[i], Head(m.mentries))]
+    /\ Discard(m) 
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, instrumentationVars, logVars, switchRequests>>
+    
+    
 \* Server i receives RecoveryRequest message from server j
 HandleRecoveryRequest(i, j, m) ==
     /\ m.mterm = currentTerm[i]
     /\ m.mtype = RecoveryRequest
     /\ m.mentries /= << >>
+\*    TODO send NewSwitchRequest message instead 
     /\ LET  entries == SelectSeq(serverRequestCache[i], LAMBDA entry: entry.term = m.mentries[1].term /\ entry.value = m.mentries[1].value)
        IN   Discard(m)
             /\ serverRequestCache' = IF entries = << >> THEN serverRequestCache ELSE [serverRequestCache EXCEPT ![j] = Append(serverRequestCache[j], Head(entries))]
        
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, instrumentationVars>>
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, instrumentationVars, logVars, switchRequests>>
 
 
 \* Leader i advances its commitIndex.

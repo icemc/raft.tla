@@ -9,14 +9,14 @@ CONSTANTS Server
 CONSTANTS Value
 
 \* Server states.
-CONSTANTS Follower, Candidate, Leader
+CONSTANTS Follower, Candidate, Leader, Switch
 
 \* A reserved value.
 CONSTANTS Nil
 
 \* Message types:
 CONSTANTS RequestVoteRequest, RequestVoteResponse,
-          AppendEntriesRequest, AppendEntriesResponse, RecoveryRequest
+          AppendEntriesRequest, AppendEntriesResponse, RecoveryRequest, NewSwitchRequest
 
 \* for instrumentation to limit model state space
 CONSTANTS MaxClientRequests
