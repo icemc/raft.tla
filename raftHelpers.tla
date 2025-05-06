@@ -2,9 +2,11 @@
 
 EXTENDS raftVariables
 
+SeversWithoutSwitch == Server \ {switchIndex}
+
 \* The set of all quorums. This just calculates simple majorities, but the only
 \* important property is that every quorum overlaps with every other.
-Quorum == {i \in SUBSET(Server) : Cardinality(i) * 2 > Cardinality(Server)}
+Quorum == {i \in SUBSET(SeversWithoutSwitch) : Cardinality(i) * 2 > Cardinality(SeversWithoutSwitch)}
 
 \* The term of the last entry in a log, or 0 if the log is empty.
 LastTerm(xlog) == IF Len(xlog) = 0 THEN 0 ELSE xlog[Len(xlog)].term

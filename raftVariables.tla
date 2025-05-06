@@ -64,8 +64,12 @@ VARIABLE nextIndex
 VARIABLE matchIndex
 leaderVars == <<nextIndex, matchIndex>>
 
+VARIABLES switchBuffer, switchIndex, switchSentRecord, unorderRequest
+
+hovercraftVars == <<switchBuffer, switchIndex, switchSentRecord, unorderRequest>>
+
 \* All variables; used for stuttering (asserting state hasn't changed).
-vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars>>
+vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars>>
 
 =============================================================================
 \* Created by Ovidiu-Cristian Marcu

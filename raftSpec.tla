@@ -48,11 +48,17 @@ MyNext ==
 \*           \/ \E i \in Server : Restart(i)
 \*           \/ \E i,j \in Server : i /= j /\ RequestVote(i, j)
 \*           \/ \E i \in Server : BecomeLeader(i)
-           \/ \E i \in Server, v \in Value : state[i] = Leader /\ ClientRequest(i, v)
-           \/ \E i \in Server : AdvanceCommitIndex(i)
-           \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
+           \/ \E i \in Server : state[i] /= Switch /\ AdvanceCommitIndex(i)
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
                     msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
+           \/ \E s \in Server: \E v \in unorderRequest[s], w \in DOMAIN switchBuffer: state[s] = Leader /\ w = v /\ ~(\E l \in DOMAIN log[s]: log[s][l] = switchBuffer[v]) /\ LeaderReceivesRequest(s, v)
+                 
+           \/ \E v \in DOMAIN switchBuffer, s \in Server: state[s] /= Switch /\ ~(<<switchBuffer[v].value, switchBuffer[v].term>> \in switchSentRecord[s]) /\ SwitchSendRequest(switchBuffer[v], s) 
+           \/ \E i,j \in Server : i /= j /\ state[i] /= Switch /\ state[j] /= Switch  /\ AppendEntries(i, j)
+           \/ \E v \in Value : SwitchClientRequest(v)
+\*           \/ \E i \in Server, v \in Value : state[i] = Leader /\ ClientRequest(i, v)
+          
+           
 \*           \/ \E m \in {msg \in ValidMessage(messages) : 
 \*                    msg.mtype \in {AppendEntriesRequest}} : DuplicateMessage(m)
 \*           \/ \E m \in {msg \in ValidMessage(messages) : 

@@ -41,6 +41,17 @@ EntryCommitAckQuorumInv ==
 \* fake inv to obtain a trace
 LeaderCommitted ==
     \E i \in Server : commitIndex[i] /= 1 \*
+    
+\*FollowersAppendEntry == \E i,j \in Server : i /= j /\ state[i] = Follower /\ state[j] = Follower /\ Len(log[i]) = 1 /\ Len(log[j]) = 1 \* Verifies that at least one follower appends an entry
+
+FollowersAppendEntry == \A i \in Server: (state[i] = Follower /\ Len(log[i]) > 1) \/ state[i] /= Follower
+
+ServersAppendEntry == \E i \in Server: Len(log[i]) = 0 /\ state[i] /= Switch
+
+MessageSent == messages = <<>>
+
+
+AllMessagesNotConsummed == messages = <<>> \/ Cardinality(DOMAIN messages) < 8 \/ \E m \in DOMAIN messages: messages[m] /= 0
 
 \*Modify LeaderCommited == \E i \in Server : commitIndex[i] /= 1
 \*and run with MySpec OR
