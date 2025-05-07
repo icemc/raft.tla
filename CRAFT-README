@@ -79,3 +79,21 @@ Refactor code
 
 1. Renamed switchCache to serverRequestCache
 2. Renamed switchVars to requestVars
+
+----------------------------------------------------------------------------------
+
+27/04/2024 - 29/04/2024
+
+Changed approach
+
+1. Switch now sends request to servers via message channel
+2. Added a new constant called Switch to identify messages sent by the switch
+3. Added a new message type NewSwitchRequest which identifies a new request sent by the switch to servers
+4. Server handle the NewSwitchRequest in  HandleNewSwitchRequest function
+5. Leader upon receiving a new request append it to its log, this is handled in LeaderReceivedRequest function
+6. Added new message type RecoveryRequest
+7. Server upon receiving an AppendEntriesRequest check if the request from leader in found in their cache else they send RecoveryRequest message to Leader
+8. Recovery of request is handled in HandleRecoveryRequest function
+
+
+TODO test recovery mechanism 
