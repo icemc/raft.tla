@@ -68,8 +68,11 @@ VARIABLES switchBuffer, switchIndex, switchSentRecord, unorderRequest
 
 hovercraftVars == <<switchBuffer, switchIndex, switchSentRecord, unorderRequest>>
 
+
+VARIABLE Servers
+
 \* All variables; used for stuttering (asserting state hasn't changed).
-vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars>>
+vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 =============================================================================
 \* Created by Ovidiu-Cristian Marcu

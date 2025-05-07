@@ -35,6 +35,7 @@ MyInit ==
         r4 == ServerIds[4]
     IN
     /\ switchIndex = r1
+    /\ Servers = Server \ {r1}
     /\ commitIndex = [s \in Server |-> 0]
     /\ currentTerm = [s \in Server |-> 2]
     /\ leaderCount = [s \in Server |-> IF s = r2 THEN 1 ELSE 0]

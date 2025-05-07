@@ -2,11 +2,10 @@
 
 EXTENDS raftVariables
 
-SeversWithoutSwitch == Server \ {switchIndex}
 
 \* The set of all quorums. This just calculates simple majorities, but the only
 \* important property is that every quorum overlaps with every other.
-Quorum == {i \in SUBSET(SeversWithoutSwitch) : Cardinality(i) * 2 > Cardinality(SeversWithoutSwitch)}
+Quorum == {i \in SUBSET(Servers) : Cardinality(i) * 2 > Cardinality(Servers)}
 
 \* The term of the last entry in a log, or 0 if the log is empty.
 LastTerm(xlog) == IF Len(xlog) = 0 THEN 0 ELSE xlog[Len(xlog)].term
@@ -70,7 +69,7 @@ Committed(i) ==
     THEN << >>
     ELSE SubSeq(log[i],1,commitIndex[i])
 
-MyConstraint == (\A i \in Server: currentTerm[i] <= MaxTerm /\ Len(log[i]) <= MaxClientRequests ) 
+MyConstraint == (\A i \in Servers: currentTerm[i] <= MaxTerm /\ Len(log[i]) <= MaxClientRequests ) 
                 /\ (\A m \in DOMAIN messages: messages[m] <= 1)
 
 Symmetry == Permutations(Server)
