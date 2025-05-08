@@ -377,8 +377,15 @@ HandleRecoveryRequest(i, j, m) ==
     /\ m.mentries /= << >>
 \*    TODO send NewSwitchRequest message instead 
     /\ LET  entries == SelectSeq(serverRequestCache[i], LAMBDA entry: entry.term = m.mentries[1].term /\ entry.value = m.mentries[1].value)
-       IN   Discard(m)
-            /\ serverRequestCache' = IF entries = << >> THEN serverRequestCache ELSE [serverRequestCache EXCEPT ![j] = Append(serverRequestCache[j], Head(entries))]
+            msg == 
+                    [mtype      |-> NewSwitchRequest, \* Impersonate switch request
+                    mterm       |-> currentTerm[i],
+                    mentries    |-> <<Head(entries)>>, \* A sequence containing a single request
+                    msource     |-> Switch,
+                    mdest       |-> j]
+       IN   /\ Discard(m)
+            /\ Send(msg)
+\*            /\ serverRequestCache' = IF entries = << >> THEN serverRequestCache ELSE [serverRequestCache EXCEPT ![j] = Append(serverRequestCache[j], Head(entries))]
        
     /\ UNCHANGED <<serverVars, candidateVars, leaderVars, instrumentationVars, logVars, switchRequests>>
 
