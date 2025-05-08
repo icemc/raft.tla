@@ -27,11 +27,15 @@ Init == /\ messages = [m \in {} |-> 0]
 
 \* MyInit remains unchanged for the core Raft state, entryCommitStats is handled in Init.
 MyInit ==
-    LET ServerIds == CHOOSE ids \in [1..3 -> Server] : TRUE
+    LET ServerIds == CHOOSE ids \in [1..4 -> Server] :
+                        \A i, j \in 1..4 : i # j => ids[i] # ids[j]
         r1 == ServerIds[1]
         r2 == ServerIds[2]
         r3 == ServerIds[3]
+        r4 == ServerIds[4]
     IN
+    /\ switchIndex = r1
+    /\ Servers = Server \ {r1}
     /\ commitIndex = [s \in Server |-> 0]
     /\ currentTerm = [s \in Server |-> 2]
     /\ leaderCount = [s \in Server |-> IF s = r2 THEN 1 ELSE 0]
@@ -40,14 +44,20 @@ MyInit ==
     /\ maxc = 0
     /\ messages = [m \in {} |-> 0]  \* Start with empty messages
     /\ nextIndex = [s \in Server |-> [t \in Server |-> 1]]
-    /\ state = [s \in Server |-> IF s = r2 THEN Leader ELSE Follower]
+    /\ state = [s \in Server |->
+              CASE s = switchIndex -> Switch
+              [] s = r2 -> Leader
+              [] OTHER  -> Follower]
     /\ votedFor = [s \in Server |-> IF s = r2 THEN Nil ELSE r2]
-    /\ voterLog = [s \in Server |-> IF s = r2 THEN (r1 :> <<>> @@ r3 :> <<>>) ELSE <<>>]
-    /\ votesGranted = [s \in Server |-> IF s = r2 THEN {r1, r3} ELSE {}]
-    /\ votesResponded = [s \in Server |-> IF s = r2 THEN {r1, r3} ELSE {}]
+    /\ voterLog = [s \in Server |-> IF s = r2 THEN (r3 :> <<>> @@ r4 :> <<>>) ELSE <<>>]
+    /\ votesGranted = [s \in Server |-> IF s = r2 THEN {r3, r4} ELSE {}]
+    /\ votesResponded = [s \in Server |-> IF s = r2 THEN {r3, r4} ELSE {}]
     /\ entryCommitStats = [ idx_term \in {} |-> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ] ] \* Initialize here too
-    /\ serverRequestCache = [s \in Server |-> <<>>] \* Initilize all server received RPCs from Switch to empty sequence 
-    /\ switchRequests = [r \in {} |-> <<>>] \* 
+    /\ switchSentRecord = [s \in Server |-> {} ]
+    /\ unorderRequest = [s \in Server |-> {} ]
+    /\ switchBuffer = [i \in {} |-> [term: Nat, value: STRING, payload: STRING]]
+\*    /\ PrintT("MyInit: serversWithoutSwitch=" \o ToString(SeversWithoutSwitch))
+\*    /\ PrintT("MyInit: Quorum=" \o ToString(Quorum))
 
 \* to be used directly in model Init the value
 \*MyInit2 ==

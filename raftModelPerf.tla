@@ -40,13 +40,26 @@ EntryCommitAckQuorumInv ==
 
 \* fake inv to obtain a trace
 LeaderCommitted ==
-    \E i \in Server : commitIndex[i] /= 1 \*
+    \E i \in Servers : commitIndex[i] /= 1 \*
     
-FollowersAppendEntry == \E i,j \in Server : i /= j /\ state[i] = Follower /\ state[j] = Follower /\ Len(log[i]) = 1 /\ Len(log[j]) = 1 \* Verifies that at least one follower appends an entry
+\*FollowersAppendEntry == \E i,j \in Server : i /= j /\ state[i] = Follower /\ state[j] = Follower /\ Len(log[i]) = 1 /\ Len(log[j]) = 1 \* Verifies that at least one follower appends an entry
 
-ServersAppendEntry == \E i \in Server: Len(log[i]) = 0
+FollowersAppendEntry == \A i \in Servers: (state[i] = Follower /\ Len(log[i]) > 0) \/ state[i] /= Follower
 
-MessageSent == messages = <<>>
+ServersAppendEntry == \E i \in Servers: Len(log[i]) = 0 /\ state[i] /= Switch
+
+MessageSent == \A i,j \in DOMAIN messages: 
+    \/ Cardinality(DOMAIN messages) < 7 
+\*    \/  /\ Cardinality(DOMAIN messages) >= 2
+\*        /\ j /= i 
+\*        /\  \/ (i.mtype = AppendEntriesResponse /\ messages[i] /= 0) 
+\*            \/ (j.mtype = AppendEntriesResponse /\ messages[j] /= 0) 
+\*\*            \/ (i.mtype = AppendEntriesRequest /\ j.mtype = AppendEntriesRequest)
+
+
+AllMessagesNotConsummed == messages = <<>> \/ Cardinality(DOMAIN messages) < 9 \/ \E m \in DOMAIN messages: messages[m] /= 0
+
+
 
 \*Modify LeaderCommited == \E i \in Server : commitIndex[i] /= 1
 \*and run with MySpec OR

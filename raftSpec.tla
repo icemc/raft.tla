@@ -37,8 +37,7 @@ Next ==
 \*           \/ \E i \in Server : Restart(i)
            \/ \E i,j \in Server : i /= j /\ RequestVote(i, j)
            \/ \E i \in Server : BecomeLeader(i)
-           \/ \E v \in Value : ClientRequest(v)
-           \/ \E i \in Server, v \in Value : state[i] = Leader /\ LeaderReceivedRequest(i, v)
+           \/ \E i \in Server, v \in Value : state[i] = Leader /\ SwitchClientRequest(i, v)
            \/ \E i \in Server : AdvanceCommitIndex(i)
            \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
@@ -53,45 +52,52 @@ Next ==
 \*\*           \/ \E i \in Server : Restart(i)
 \*\*           \/ \E i,j \in Server : i /= j /\ RequestVote(i, j)
 \*\*           \/ \E i \in Server : BecomeLeader(i)
-\*           \/ \E v \in Value : ClientRequest(v)
-\*\*           \/ \E r \in DOMAIN switchRequests: switchRequests[r] = <<>> /\ SwitchBroadcastRequest(r)
-\*           \/ \E i \in Server , r \in DOMAIN switchRequests: ~(\E j \in DOMAIN switchRequests[r]: switchRequests[r][j] = i) /\ SwitchSendRequest(r, i)
-\*           \/ \E i \in Server : AdvanceCommitIndex(i)
-\*           \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
+\*           \/ \E i \in Server : state[i] /= Switch /\ AdvanceCommitIndex(i)
 \*           \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
-\*                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse, RecoveryRequest, NewSwitchRequest}} : Receive(m)
-\*           \/ \E i \in Server: \E j \in DOMAIN serverRequestCache[i]: state[i] = Leader 
-\*                /\ serverRequestCache[i][j] \notin  DOMAIN log 
-\*                /\ LeaderReceivedRequest(i, serverRequestCache[i][j])
+\*                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
+\*           \/ \E s \in Server: \E v \in unorderRequest[s], w \in DOMAIN switchBuffer: state[s] = Leader /\ w = v /\ ~(\E l \in DOMAIN log[s]: log[s][l] = switchBuffer[v]) /\ LeaderReceivesRequest(s, v)
+\*                 
+\*           \/ \E v \in DOMAIN switchBuffer, s \in Server: state[s] /= Switch /\ ~(<<switchBuffer[v].value, switchBuffer[v].term>> \in switchSentRecord[s]) /\ SwitchSendRequest(switchBuffer[v], s) 
+\*           \/ \E i,j \in Server : i /= j /\ state[i] /= Switch /\ state[j] /= Switch  /\ AppendEntries(i, j)
+\*           \/ \E v \in Value : SwitchClientRequest(v)
+\*\*           \/ \E i \in Server, v \in Value : state[i] = Leader /\ ClientRequest(i, v)
+\*          
+\*           
 \*\*           \/ \E m \in {msg \in ValidMessage(messages) : 
 \*\*                    msg.mtype \in {AppendEntriesRequest}} : DuplicateMessage(m)
 \*\*           \/ \E m \in {msg \in ValidMessage(messages) : 
 \*\*                    msg.mtype \in {RequestVoteRequest}} : DropMessage(m)
 
 
-\*\* Consume messages before producing them
+\*MyNext == 
+\*           \/ \E v \in Value, s \in Servers: state[s] = Leader /\ SwitchClientRequest(s, v)
+\*           
+\*           \/ \E v \in DOMAIN switchBuffer, s \in Servers: ~(<<switchBuffer[v].value, switchBuffer[v].term>> \notin switchSentRecord[s]) /\ SwitchSendRequest(switchBuffer[v], s) 
+\*           
+\*           \/ \E s \in Servers: \E v \in unorderRequest[s], w \in DOMAIN switchBuffer: state[s] = Leader /\ w = v /\ ~(\E l \in DOMAIN log[s]: log[s][l] = switchBuffer[v]) /\ LeaderReceivesRequest(s, v)
+\*                 
+\*           \/ \E i \in Servers: AdvanceCommitIndex(i)
+\*           
+\*           \/ \E i,j \in Servers: i /= j  /\ AppendEntries(i, j)
+\*           
+\*           \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
+\*                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
+                    
 MyNext == 
-\*           \/ \E i \in Server : Timeout(i)
-\*           \/ \E i \in Server : Restart(i)
-\*           \/ \E i,j \in Server : i /= j /\ RequestVote(i, j)
-\*           \/ \E i \in Server : BecomeLeader(i)
+           \/ \E v \in Value, s \in Servers: state[s] = Leader /\ SwitchClientRequest(s, v)
+           
+           \/ \E v \in DOMAIN switchBuffer, s \in Servers: SwitchClientRequestReplicate(s, v) 
+           
+           \/ \E s \in Servers, v \in DOMAIN switchBuffer: state[s] = Leader  /\ LeaderIngressHovercRaftRequest(s, v)
+                 
+           \/ \E i \in Servers: AdvanceCommitIndex(i)
+           
+           \/ \E i,j \in Servers: i /= j  /\ AppendEntries(i, j)
            
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
-                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse, RecoveryRequest, NewSwitchRequest}} : Receive(m)
-           \/ \E i \in Server: \E j \in DOMAIN serverRequestCache[i]: state[i] = Leader 
-                /\ serverRequestCache[i][j] \notin  DOMAIN log 
-                /\ LeaderReceivedRequest(i, serverRequestCache[i][j])
-           \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
-           \/ \E v \in Value : ClientRequest(v)
-\*           \/ \E r \in DOMAIN switchRequests: switchRequests[r] = <<>> /\ SwitchBroadcastRequest(r)
-           \/ \E i \in Server , r \in DOMAIN switchRequests: ~(\E j \in DOMAIN switchRequests[r]: switchRequests[r][j] = i) /\ SwitchSendRequest(r, i)
-           \/ \E i \in Server : AdvanceCommitIndex(i)
+                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
            
-\*           \/ \E m \in {msg \in ValidMessage(messages) : 
-\*                    msg.mtype \in {AppendEntriesRequest}} : DuplicateMessage(m)
-\*           \/ \E m \in {msg \in ValidMessage(messages) : 
-\*                    msg.mtype \in {RequestVoteRequest}} : DropMessage(m)
-
+          
 
 \* The specification must start with the initial state and transition according
 \* to Next.

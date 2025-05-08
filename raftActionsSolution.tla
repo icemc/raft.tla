@@ -18,7 +18,7 @@ Restart(i) ==
     /\ nextIndex'      = [nextIndex EXCEPT ![i] = [j \in Server |-> 1]]
     /\ matchIndex'     = [matchIndex EXCEPT ![i] = [j \in Server |-> 0]]
     /\ commitIndex'    = [commitIndex EXCEPT ![i] = 0]
-    /\ UNCHANGED <<messages, currentTerm, votedFor, log, instrumentationVars, requestVars>>
+    /\ UNCHANGED <<messages, currentTerm, votedFor, log, instrumentationVars, hovercraftVars, Servers>>
 
 \* Modified to restrict Timeout to just Followers
 \* Server i times out and starts a new election. Follower -> Candidate
@@ -32,7 +32,7 @@ Timeout(i) == /\ state[i] \in {Follower} \*, Candidate
               /\ votesResponded' = [votesResponded EXCEPT ![i] = {}]
               /\ votesGranted'   = [votesGranted EXCEPT ![i] = {}]
               /\ voterLog'       = [voterLog EXCEPT ![i] = [j \in {} |-> <<>>]]
-              /\ UNCHANGED <<messages, leaderVars, logVars, instrumentationVars, requestVars>>
+              /\ UNCHANGED <<messages, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 \* Modified to restrict Leader transitions, bounded by MaxBecomeLeader
 \* Candidate i transitions to leader. Candidate -> Leader
@@ -46,7 +46,7 @@ BecomeLeader(i) ==
     /\ matchIndex' = [matchIndex EXCEPT ![i] =
                          [j \in Server |-> 0]]
     /\ leaderCount' = [leaderCount EXCEPT ![i] = leaderCount[i] + 1]
-    /\ UNCHANGED <<messages, currentTerm, votedFor, candidateVars, logVars, maxc, entryCommitStats, requestVars>>
+    /\ UNCHANGED <<messages, currentTerm, votedFor, candidateVars, logVars, maxc, entryCommitStats, hovercraftVars, Servers>>
 
 \* Modified up to MaxTerm; Back To Follower
 \* Any RPC with a newer term causes the recipient to advance its term first.
@@ -57,7 +57,7 @@ UpdateTerm(i, j, m) ==
     /\ state'          = [state       EXCEPT ![i] = Follower]
     /\ votedFor'       = [votedFor    EXCEPT ![i] = Nil]
        \* messages is unchanged so m can be processed further.
-    /\ UNCHANGED <<messages, candidateVars, leaderVars, logVars, instrumentationVars, requestVars>>
+    /\ UNCHANGED <<messages, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 \***************************** REQUEST VOTE **********************************************
 \* Message handlers
@@ -73,7 +73,7 @@ RequestVote(i, j) ==
              mlastLogIndex |-> Len(log[i]),
              msource       |-> i,
              mdest         |-> j])
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, requestVars>>
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 \* Server i receives a RequestVote request from server j with
 \* m.mterm <= currentTerm[i].
@@ -96,7 +96,7 @@ HandleRequestVoteRequest(i, j, m) ==
                  msource      |-> i,
                  mdest        |-> j],
                  m)
-       /\ UNCHANGED <<state, currentTerm, candidateVars, leaderVars, logVars, instrumentationVars, requestVars>>
+       /\ UNCHANGED <<state, currentTerm, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 \* Server i receives a RequestVote response from server j with
 \* m.mterm = currentTerm[i].
@@ -114,84 +114,66 @@ HandleRequestVoteResponse(i, j, m) ==
        \/ /\ ~m.mvoteGranted
           /\ UNCHANGED <<votesGranted, voterLog>>
     /\ Discard(m)
-    /\ UNCHANGED <<serverVars, votedFor, leaderVars, logVars, instrumentationVars, requestVars>>
+    /\ UNCHANGED <<serverVars, votedFor, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 \* Responses with stale terms are ignored.
 DropStaleResponse(i, j, m) ==
     /\ m.mterm < currentTerm[i]
     /\ Discard(m)
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, requestVars>>
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 \***************************** AppendEntries **********************************************
 
-\* Modified. Switch receives a client request to foward to leader and other followers. up to MaxClientRequests.
-ClientRequest(v) ==
-    /\ \E i \in Server : state[i] = Leader
-    /\ maxc < MaxClientRequests 
+\* Modified. Leader i receives a client request to add v to the log. up to MaxClientRequests.
+SwitchClientRequest(i, v) == 
+    /\ state[i] = Leader
+    /\ \E s \in Server: state[s] = Switch
+    \* Make sure prevoius requests have been served before serving new request (for debugging purposes)
+    \* /\ \A i \in DOMAIN switchBuffer, s \in Servers: <<switchBuffer[i].value, switchBuffer[i].term>> \in switchSentRecord[s]
+    /\ maxc < MaxClientRequests
     /\ LET 
-           leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
-           entryTerm == currentTerm[leader] \* Get current term of Leader
+           entryTerm == currentTerm[i]
            entry == [term |-> entryTerm, value |-> v, payload |-> v]
-           entryExists == \E r \in DOMAIN switchRequests: r.term = entry.term /\ r.value = entry.value /\ r.payload = entry.payload
-           
-       IN
+           entryExists == \E r \in DOMAIN switchBuffer: entry = switchBuffer[r]
+      IN
            IF ~entryExists THEN
             /\ maxc' = maxc + 1
-            /\ switchRequests' = switchRequests @@ (entry :> <<>>)
-           ELSE UNCHANGED <<maxc, switchRequests>>
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats, serverRequestCache>>
+            /\ switchBuffer' = switchBuffer @@ (v :> entry)
+           ELSE UNCHANGED <<maxc, switchBuffer>>
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats, switchIndex, switchSentRecord, unorderRequest, Servers>>
 
-\* Switch sends NewSwitchRequest message to a single server
-SwitchSendRequest(r, j) == 
-    /\ \E entry \in DOMAIN switchRequests: entry = r
-    /\ ~(\E i \in DOMAIN switchRequests[r]: switchRequests[r][i] = j)
-    /\ LET leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
-           entryTerm == currentTerm[leader] \* Get current term of Leader
-            msg == 
-                    [mtype      |-> NewSwitchRequest,
-                    mterm       |-> entryTerm,
-                    mentries    |-> <<r>>, \* A sequence containing a single request
-                    msource     |-> Switch,
-                    mdest       |-> j]
-                
-       IN  /\ Send(msg)
-           /\ switchRequests' = [switchRequests EXCEPT ![r] = Append(switchRequests[r], j)]
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, serverRequestCache>>
 
-\* Switch sends NewSwitchRequest message to all servers
-SwitchBroadcastRequest(r) == 
-    /\ \E entry \in DOMAIN switchRequests: entry = r
-    /\ LET  leader == CHOOSE s \in Server : state[s] = Leader \* Get the leader
-            entryTerm == currentTerm[leader] \* Get current term of Leader
-            serverSeq == SetToSeq(Server)
-            msgs == [s \in 1..Len(serverSeq)  |->       [mtype      |-> NewSwitchRequest,
-                                                        mterm       |-> entryTerm,
-                                                        mentries    |-> <<r>>, \* A sequence containing a single request
-                                                        msource     |-> Switch,
-                                                        mdest       |-> serverSeq[s]]]
-                                            
-       IN   
-            /\ SendMultiple(msgs)
-            /\ switchRequests' = [switchRequests EXCEPT ![r] = serverSeq]
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, serverRequestCache>>
-   
-\* Leader Receives request from switch and appends it to its log
-LeaderReceivedRequest(i, r) == 
+SwitchClientRequestReplicate(i, v) == 
+    /\ \E j \in DOMAIN switchBuffer: j = v \* Check if v is a valid switch request
+    /\ ~(\E entry \in switchSentRecord[i]: entry = <<switchBuffer[v].value, switchBuffer[v].term>>)
+    /\ switchSentRecord' = [switchSentRecord EXCEPT ![i] = switchSentRecord[i] \cup {<<switchBuffer[v].value, switchBuffer[v].term>>} ]
+    /\ unorderRequest' = [unorderRequest EXCEPT ![i] = unorderRequest[i] \cup {switchBuffer[v].value} ]
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, switchIndex, switchBuffer, Servers>> 
+
+\* Leader Receives request from switch and appends it to its log. This will trigger Append Entries to be sent
+LeaderIngressHovercRaftRequest(i, v) == 
     /\ state[i] = Leader
-    /\ LET entryTerm == currentTerm[i]
-           entry == r           
-           entryReceived == \E j \in DOMAIN serverRequestCache[i] : r = serverRequestCache[i][j]
-           newLog == IF entryReceived THEN Append(log[i], entry) ELSE log[i]
+    /\ \E j \in DOMAIN switchBuffer: v = j \* Check if v is a valid switch request
+    /\ \E j \in unorderRequest[i] : v = j \* Check if leader server has already received request v from switch
+    /\ ~(\E j \in DOMAIN log[i] : log[i][j] = switchBuffer[v])
+\*    TODO add enabling condition that checks if value v has been sent to all servers (check switchSentRecords)
+\*    /\ \A s \in Server: (state[s] = Switch) \/ (state[s] /= Switch /\ v \in unorderRequest[s])
+    /\ LET entryTerm == switchBuffer[v].term
+           entry == switchBuffer[v]
+\*           entryExist == \E j \in DOMAIN log[i] : log[i][j] = switchBuffer[v]
+           newLog == Append(log[i], entry)
            newEntryIndex == Len(log[i]) + 1
            newEntryKey == <<newEntryIndex, entryTerm>>
        IN
         /\ log' = [log EXCEPT ![i] = newLog]
+        /\ unorderRequest' = [unorderRequest EXCEPT ![i] = @ \ {v}]
         /\ entryCommitStats' =
-              IF entryReceived /\ newEntryIndex > 0 \* Only add stats for truly new entries
+              IF newEntryIndex > 0 \* Only add stats for truly new entries
               THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ])
               ELSE entryCommitStats
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount, maxc, requestVars>>
-        
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount, maxc, switchBuffer, switchIndex, switchSentRecord, Servers>>
+
+
 \* Modified. Leader i sends j an AppendEntries request containing exactly 1 entry. It was up to 1 entry.
 \* While implementations may want to send more than 1 at a time, this spec uses
 \* just 1 because it minimizes atomic regions without loss of generality.
@@ -203,14 +185,12 @@ AppendEntries(i, j) ==
     /\ matchIndex[i][j] < nextIndex[i][j] \* Only send if follower hasn't already acknowledged this index
     /\ LET entryIndex == nextIndex[i][j]
            entry == log[i][entryIndex]
-           
-           \* Build the metadata to be sent (remove payload).
            entries == << [term |-> entry.term, value |-> entry.value] >>
            entryKey == <<entryIndex, entry.term>>
            prevLogIndex == entryIndex - 1
            prevLogTerm == IF prevLogIndex > 0 THEN
                               log[i][prevLogIndex].term
-                          ELSE 0
+                          ELSE 0 
            message == [mtype          |-> AppendEntriesRequest,
                 mterm          |-> currentTerm[i],
                 mprevLogIndex  |-> prevLogIndex,
@@ -223,20 +203,16 @@ AppendEntries(i, j) ==
                 mcommitIndex   |-> Min({commitIndex[i], entryIndex}), \* lastEntry}),
                 msource        |-> i,
                 mdest          |-> j]
-                          
            \* Send up to 1 entry, constrained by the end of the log.
            \* lastEntry == Min({Len(log[i]), nextIndex[i][j]})
            \* entries == SubSeq(log[i], nextIndex[i][j], lastEntry)
            
-       IN   
-            Send(message) 
-            /\ entryCommitStats' =
-                IF entryKey \in DOMAIN entryCommitStats 
-                    /\ ~entryCommitStats[entryKey].committed 
-\*                    /\ ~(message \in DOMAIN messages)
-                THEN [entryCommitStats EXCEPT ![entryKey].sentCount = @ + 1]
-                ELSE entryCommitStats         
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, maxc, leaderCount, requestVars>>
+       IN Send(message)
+       /\ entryCommitStats' =
+            IF entryKey \in DOMAIN entryCommitStats /\ ~entryCommitStats[entryKey].committed
+            THEN [entryCommitStats EXCEPT ![entryKey].sentCount = @ + 1]
+            ELSE entryCommitStats         
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, maxc, leaderCount, hovercraftVars, Servers>>  
 
 \* Server i receives an AppendEntries request from server j with
 \* m.mterm <= currentTerm[i]. This just handles m.entries of length 0 or 1, but
@@ -260,12 +236,12 @@ HandleAppendEntriesRequest(i, j, m) ==
                        msource         |-> i,
                        mdest           |-> j],
                        m)
-             /\ UNCHANGED <<serverVars, logVars>>
+             /\ UNCHANGED <<serverVars, logVars, unorderRequest>>
           \/ \* return to follower state
              /\ m.mterm = currentTerm[i]
              /\ state[i] = Candidate
              /\ state' = [state EXCEPT ![i] = Follower]
-             /\ UNCHANGED <<currentTerm, votedFor, logVars, messages>>
+             /\ UNCHANGED <<currentTerm, votedFor, logVars, messages, unorderRequest>>
           \/ \* accept request
              /\ m.mterm = currentTerm[i]
              /\ state[i] = Follower
@@ -280,7 +256,8 @@ HandleAppendEntriesRequest(i, j, m) ==
                           \* example if we process an old, duplicated request),
                           \* but that doesn't really affect anything.
                        /\ commitIndex' = [commitIndex EXCEPT ![i] =
-                                              m.mcommitIndex]   
+                                              m.mcommitIndex]
+\*                       /\ commitIndex' = [commitIndex EXCEPT ![i] = @ + 1]     
 \*                       /\ commitIndex' = [commitIndex EXCEPT ![i] = 
 \*                                            IF commitIndex[i] < m.mcommitIndex THEN 
 \*                                                Min({m.mcommitIndex, Len(log[i])}) 
@@ -294,7 +271,7 @@ HandleAppendEntriesRequest(i, j, m) ==
                                  msource         |-> i,
                                  mdest           |-> j],
                                  m)
-                       /\ UNCHANGED <<serverVars, log>>
+                       /\ UNCHANGED <<serverVars, log, unorderRequest>>
                    \/ \* conflict: remove 1 entry (simplified from original spec - assumes entry length 1)
                       \* since we do not send empty entries, we have to provide a larger set of values to ensure some progress
                        /\ m.mentries /= << >>
@@ -305,31 +282,25 @@ HandleAppendEntriesRequest(i, j, m) ==
 \*                       /\ LET new == [index2 \in 1..(Len(log[i]) - 1) |->
 \*                                          log[i][index2]]
 \*                          IN log' = [log EXCEPT ![i] = new]
-                       /\ UNCHANGED <<serverVars, commitIndex, messages>>
+                       /\ UNCHANGED <<serverVars, commitIndex, messages, unorderRequest>>
                        
-                   \/ \* no conflict but server i didn't receive request from switch. Send recovery message to Server j
-                       /\ m.mentries /= << >>
-                       \* Check if switch has already sent request but hasn't been consumed yet. If true wait for this message to be consumed. We basically stall if true
-                       /\ ~(\E r \in DOMAIN switchRequests: \E s \in DOMAIN switchRequests[r]: m.mentries[1].term = r.term /\ m.mentries[1].value = r.value /\ switchRequests[r][s] = i)
-                       \* /\ \E i \in DOMAIN messages : i.mtype = NewSwitchRequest /\ i.mterm = m.mentries[0].mterm /\ i.mentries[0].mterm = m.mentries[0].mterm
-                       /\ ~(\E k \in DOMAIN serverRequestCache[i] :  m.mentries[1].term = serverRequestCache[i][k].term /\ m.mentries[1].value = serverRequestCache[i][k].value)
-                       /\ LET message == [mtype     |-> RecoveryRequest,
-                                          mterm          |-> currentTerm[i],
-                                          mentries       |-> m.mentries,
-                                          msource         |-> i,
-                                          mdest           |-> j]
-                          IN Send(message)
-                       /\ UNCHANGED <<serverVars, commitIndex, log>>
+\*                   \/ \* no conflict: append entry
+\*                       /\ m.mentries /= << >>
+\*                       /\ Len(log[i]) = m.mprevLogIndex
+\*                       /\ log' = [log EXCEPT ![i] =
+\*                                      Append(log[i], m.mentries[1])]
+\*                       /\ UNCHANGED <<serverVars, commitIndex, messages>>
                        
                    \/ \* no conflict: append entry
                        /\ m.mentries /= << >>
-                       /\ \E k \in DOMAIN serverRequestCache[i] :  m.mentries[1].term = serverRequestCache[i][k].term /\ m.mentries[1].value = serverRequestCache[i][k].value 
+                       /\ \E k \in unorderRequest[i]: k = m.mentries[1].value
                        /\ Len(log[i]) = m.mprevLogIndex
-                       /\ LET entries == SelectSeq(serverRequestCache[i], LAMBDA entry: entry.term = m.mentries[1].term /\ entry.value = m.mentries[1].value)
-                          IN log' = IF    entries = << >> THEN log \* NO RPC was sent from switch to Server i with these values 
-                                    ELSE  [log EXCEPT ![i] = Append(log[i], Head(entries))] \* Add this entry to log, this includes the payload
+                       /\ LET entryId == CHOOSE id \in DOMAIN switchBuffer: switchBuffer[id].term = m.mentries[1].term /\ switchBuffer[id].value = m.mentries[1].value 
+                              entry == switchBuffer[entryId]
+                          IN /\ log' = [log EXCEPT ![i] = Append(log[i], entry)] \* Add this entry to log, this includes the payload
+                             /\ unorderRequest' = [unorderRequest EXCEPT ![i] = @ \ {m.mentries[1].value}]
                        /\ UNCHANGED <<serverVars, commitIndex, messages>>
-       /\ UNCHANGED <<candidateVars, leaderVars, instrumentationVars, requestVars>> \* entryCommitStats unchanged on followers
+       /\ UNCHANGED <<candidateVars, leaderVars, instrumentationVars, switchBuffer, switchIndex, switchSentRecord, Servers>> \* entryCommitStats unchanged on followers
 
 \* Server i receives an AppendEntries response from server j with
 \* m.mterm = currentTerm[i].
@@ -356,32 +327,7 @@ HandleAppendEntriesResponse(i, j, m) ==
                                Max({nextIndex[i][j] - 1, 1})]
           /\ UNCHANGED <<matchIndex, entryCommitStats>>
     /\ Discard(m)
-    /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, requestVars>>
-
-\* Server i receives an NewSwitchRequest message request from j(switch)
-HandleNewSwitchRequest(i, j, m) == 
-    /\ i /= j
-    /\ j = Switch
-    /\ m.mtype = NewSwitchRequest
-    /\ m.msource = Switch
-    /\ m.mentries /= <<>>
-    /\ serverRequestCache' = [serverRequestCache EXCEPT ![i] = Append(serverRequestCache[i], Head(m.mentries))]
-    /\ Discard(m) 
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, instrumentationVars, logVars, switchRequests>>
-    
-    
-\* Server i receives RecoveryRequest message from server j
-HandleRecoveryRequest(i, j, m) ==
-    /\ m.mterm = currentTerm[i]
-    /\ m.mtype = RecoveryRequest
-    /\ m.mentries /= << >>
-\*    TODO send NewSwitchRequest message instead 
-    /\ LET  entries == SelectSeq(serverRequestCache[i], LAMBDA entry: entry.term = m.mentries[1].term /\ entry.value = m.mentries[1].value)
-       IN   Discard(m)
-            /\ serverRequestCache' = IF entries = << >> THEN serverRequestCache ELSE [serverRequestCache EXCEPT ![j] = Append(serverRequestCache[j], Head(entries))]
-       
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, instrumentationVars, logVars, switchRequests>>
-
+    /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, hovercraftVars, Servers>>
 
 \* Leader i advances its commitIndex.
 \* This is done as a separate step from handling AppendEntries responses,
@@ -390,7 +336,7 @@ HandleRecoveryRequest(i, j, m) ==
 AdvanceCommitIndex(i) ==
     /\ state[i] = Leader
     /\ LET \* The set of servers that agree up through index.
-           Agree(index) == {i} \cup {k \in Server :
+           Agree(index) == {i} \cup {k \in Servers :
                                          matchIndex[i][k] >= index}
            \* The maximum indexes for which a quorum agrees
            agreeIndexes == {index \in 1..Len(log[i]) :
@@ -413,20 +359,21 @@ AdvanceCommitIndex(i) ==
                [ key \in DOMAIN entryCommitStats |->
                    IF key \in keysToUpdate
                    THEN [ entryCommitStats[key] EXCEPT !.committed = TRUE ] \* Update record
-                   ELSE entryCommitStats[key] ]                             \* Keep old record       
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, log, maxc, leaderCount, requestVars>>
+                   ELSE entryCommitStats[key] ]                             \* Keep old record 
+        \*   /\ PrintT("AdvanceCommitIndex: newCommitIndex=" \o ToString(newCommitIndex))       
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, log, maxc, leaderCount, hovercraftVars, Servers>>
 
 \* Network state transitions
 
 \* The network duplicates a message
 DuplicateMessage(m) ==
     /\ Send(m)
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, requestVars>>
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 \* The network drops a message
 DropMessage(m) ==
     /\ Discard(m)
-    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, requestVars>>
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 =============================================================================
 \* Created by Ovidiu-Cristian Marcu

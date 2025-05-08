@@ -64,14 +64,15 @@ VARIABLE nextIndex
 VARIABLE matchIndex
 leaderVars == <<nextIndex, matchIndex>>
 
-\* serverRequestCache: A function mapping each server to a list of requests it has received from the switch
-\* switchRequests: A function mapping each request to a list of servers to which the request has been sent from switch to server
-VARIABLE serverRequestCache, switchRequests
+VARIABLES switchBuffer, switchIndex, switchSentRecord, unorderRequest
 
-requestVars == <<serverRequestCache, switchRequests>>
+hovercraftVars == <<switchBuffer, switchIndex, switchSentRecord, unorderRequest>>
+
+
+VARIABLE Servers
 
 \* All variables; used for stuttering (asserting state hasn't changed).
-vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, requestVars>>
+vars == <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, hovercraftVars, Servers>>
 
 =============================================================================
 \* Created by Ovidiu-Cristian Marcu
