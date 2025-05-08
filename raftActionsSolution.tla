@@ -140,24 +140,24 @@ SwitchClientRequest(i, v) ==
             /\ maxc' = maxc + 1
             /\ switchBuffer' = switchBuffer @@ (v :> entry)
            ELSE UNCHANGED <<maxc, switchBuffer>>
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats, switchIndex, switchSentRecord, unorderRequest, Servers>>
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats, switchIndex, switchSentRecord, unorderedRequest, Servers>>
 
 
 SwitchClientRequestReplicate(i, v) == 
     /\ \E j \in DOMAIN switchBuffer: j = v \* Check if v is a valid switch request
     /\ ~(\E entry \in switchSentRecord[i]: entry = <<switchBuffer[v].value, switchBuffer[v].term>>)
     /\ switchSentRecord' = [switchSentRecord EXCEPT ![i] = switchSentRecord[i] \cup {<<switchBuffer[v].value, switchBuffer[v].term>>} ]
-    /\ unorderRequest' = [unorderRequest EXCEPT ![i] = unorderRequest[i] \cup {switchBuffer[v].value} ]
+    /\ unorderedRequest' = [unorderedRequest EXCEPT ![i] = unorderedRequest[i] \cup {switchBuffer[v].value} ]
     /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, switchIndex, switchBuffer, Servers>> 
 
 \* Leader Receives request from switch and appends it to its log. This will trigger Append Entries to be sent
 LeaderIngressHovercRaftRequest(i, v) == 
     /\ state[i] = Leader
     /\ \E j \in DOMAIN switchBuffer: v = j \* Check if v is a valid switch request
-    /\ \E j \in unorderRequest[i] : v = j \* Check if leader server has already received request v from switch
+    /\ \E j \in unorderedRequest[i] : v = j \* Check if leader server has already received request v from switch
     /\ ~(\E j \in DOMAIN log[i] : log[i][j] = switchBuffer[v])
 \*    TODO add enabling condition that checks if value v has been sent to all servers (check switchSentRecords)
-\*    /\ \A s \in Server: (state[s] = Switch) \/ (state[s] /= Switch /\ v \in unorderRequest[s])
+\*    /\ \A s \in Server: (state[s] = Switch) \/ (state[s] /= Switch /\ v \in unorderedRequest[s])
     /\ LET entryTerm == switchBuffer[v].term
            entry == switchBuffer[v]
 \*           entryExist == \E j \in DOMAIN log[i] : log[i][j] = switchBuffer[v]
@@ -166,7 +166,7 @@ LeaderIngressHovercRaftRequest(i, v) ==
            newEntryKey == <<newEntryIndex, entryTerm>>
        IN
         /\ log' = [log EXCEPT ![i] = newLog]
-        /\ unorderRequest' = [unorderRequest EXCEPT ![i] = @ \ {v}]
+        /\ unorderedRequest' = [unorderedRequest EXCEPT ![i] = @ \ {v}]
         /\ entryCommitStats' =
               IF newEntryIndex > 0 \* Only add stats for truly new entries
               THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ])
@@ -236,12 +236,12 @@ HandleAppendEntriesRequest(i, j, m) ==
                        msource         |-> i,
                        mdest           |-> j],
                        m)
-             /\ UNCHANGED <<serverVars, logVars, unorderRequest>>
+             /\ UNCHANGED <<serverVars, logVars, unorderedRequest>>
           \/ \* return to follower state
              /\ m.mterm = currentTerm[i]
              /\ state[i] = Candidate
              /\ state' = [state EXCEPT ![i] = Follower]
-             /\ UNCHANGED <<currentTerm, votedFor, logVars, messages, unorderRequest>>
+             /\ UNCHANGED <<currentTerm, votedFor, logVars, messages, unorderedRequest>>
           \/ \* accept request
              /\ m.mterm = currentTerm[i]
              /\ state[i] = Follower
@@ -271,7 +271,7 @@ HandleAppendEntriesRequest(i, j, m) ==
                                  msource         |-> i,
                                  mdest           |-> j],
                                  m)
-                       /\ UNCHANGED <<serverVars, log, unorderRequest>>
+                       /\ UNCHANGED <<serverVars, log, unorderedRequest>>
                    \/ \* conflict: remove 1 entry (simplified from original spec - assumes entry length 1)
                       \* since we do not send empty entries, we have to provide a larger set of values to ensure some progress
                        /\ m.mentries /= << >>
@@ -282,7 +282,7 @@ HandleAppendEntriesRequest(i, j, m) ==
 \*                       /\ LET new == [index2 \in 1..(Len(log[i]) - 1) |->
 \*                                          log[i][index2]]
 \*                          IN log' = [log EXCEPT ![i] = new]
-                       /\ UNCHANGED <<serverVars, commitIndex, messages, unorderRequest>>
+                       /\ UNCHANGED <<serverVars, commitIndex, messages, unorderedRequest>>
                        
 \*                   \/ \* no conflict: append entry
 \*                       /\ m.mentries /= << >>
@@ -293,12 +293,12 @@ HandleAppendEntriesRequest(i, j, m) ==
                        
                    \/ \* no conflict: append entry
                        /\ m.mentries /= << >>
-                       /\ \E k \in unorderRequest[i]: k = m.mentries[1].value
+                       /\ \E k \in unorderedRequest[i]: k = m.mentries[1].value
                        /\ Len(log[i]) = m.mprevLogIndex
                        /\ LET entryId == CHOOSE id \in DOMAIN switchBuffer: switchBuffer[id].term = m.mentries[1].term /\ switchBuffer[id].value = m.mentries[1].value 
                               entry == switchBuffer[entryId]
                           IN /\ log' = [log EXCEPT ![i] = Append(log[i], entry)] \* Add this entry to log, this includes the payload
-                             /\ unorderRequest' = [unorderRequest EXCEPT ![i] = @ \ {m.mentries[1].value}]
+                             /\ unorderedRequest' = [unorderedRequest EXCEPT ![i] = @ \ {m.mentries[1].value}]
                        /\ UNCHANGED <<serverVars, commitIndex, messages>>
        /\ UNCHANGED <<candidateVars, leaderVars, instrumentationVars, switchBuffer, switchIndex, switchSentRecord, Servers>> \* entryCommitStats unchanged on followers
 

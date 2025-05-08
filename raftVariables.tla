@@ -64,9 +64,9 @@ VARIABLE nextIndex
 VARIABLE matchIndex
 leaderVars == <<nextIndex, matchIndex>>
 
-VARIABLES switchBuffer, switchIndex, switchSentRecord, unorderRequest
+VARIABLES switchBuffer, switchIndex, switchSentRecord, unorderedRequest
 
-hovercraftVars == <<switchBuffer, switchIndex, switchSentRecord, unorderRequest>>
+hovercraftVars == <<switchBuffer, switchIndex, switchSentRecord, unorderedRequest>>
 
 
 VARIABLE Servers

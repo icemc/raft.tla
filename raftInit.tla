@@ -54,7 +54,7 @@ MyInit ==
     /\ votesResponded = [s \in Server |-> IF s = r2 THEN {r3, r4} ELSE {}]
     /\ entryCommitStats = [ idx_term \in {} |-> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ] ] \* Initialize here too
     /\ switchSentRecord = [s \in Server |-> {} ]
-    /\ unorderRequest = [s \in Server |-> {} ]
+    /\ unorderedRequest = [s \in Server |-> {} ]
     /\ switchBuffer = [i \in {} |-> [term: Nat, value: STRING, payload: STRING]]
 \*    /\ PrintT("MyInit: serversWithoutSwitch=" \o ToString(SeversWithoutSwitch))
 \*    /\ PrintT("MyInit: Quorum=" \o ToString(Quorum))
