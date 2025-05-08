@@ -2,23 +2,6 @@
 
 EXTENDS raftVariables
 
-<<<<<<< HEAD
-\* Converts a Sequence to a Set
-RECURSIVE SeqToSet(_)
-SeqToSet(seq) ==
-  IF Len(seq) = 0 THEN {}
-  ELSE { Head(seq) } \cup SeqToSet(Tail(seq))
-  
-\* Converts a set to a sequence 
-RECURSIVE SetToSeq(_)
-SetToSeq(S) ==
-  IF S = {} THEN <<>>
-  ELSE
-    LET e == CHOOSE x \in S: TRUE IN
-      <<e>> \o SetToSeq(S \ {e})
-=======
->>>>>>> c8ce57037a9ecb36c3a3ba5667da7195c68e24e0
-
 \* The set of all quorums. This just calculates simple majorities, but the only
 \* important property is that every quorum overlaps with every other.
 Quorum == {i \in SUBSET(Servers) : Cardinality(i) * 2 > Cardinality(Servers)}
@@ -40,15 +23,7 @@ WithoutMessage(m, msgs) ==
         msgs
 
 \* Add a message to the bag of messages.
-Send(m) == messages' = WithMessage(m, messages)
-
-\* Add a new sequence of messages to the bag of messages.
-SendMultiple(msgs) == LET   
-\*                            newMessages == {msgs[i] : i \in DOMAIN msgs}
-\*                            newMessages == {m \in SeqToSet(msgs): m \notin DOMAIN messages}
-                            updates == [m \in  SeqToSet(msgs) |-> 1]
-                      IN messages' = messages @@ updates
-                      
+Send(m) == messages' = WithMessage(m, messages)                      
                       
 \* Remove a message from the bag of messages. Used when a server is done
 \* processing a message.

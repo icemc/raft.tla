@@ -57,7 +57,7 @@ MessageSent == \A i,j \in DOMAIN messages:
 \*\*            \/ (i.mtype = AppendEntriesRequest /\ j.mtype = AppendEntriesRequest)
 
 
-AllMessagesNotConsummed == messages = <<>> \/ Cardinality(DOMAIN messages) < 9 \/ \E m \in DOMAIN messages: messages[m] /= 0
+AllMessagesNotConsummed == messages = <<>> \/ Cardinality(DOMAIN messages) < 8 \/ \E m \in DOMAIN messages: messages[m] /= 0
 
 
 
