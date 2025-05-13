@@ -78,7 +78,7 @@ MoreThanOneLeaderInv ==
 \* Every (index, term) pair determines a log prefix.
 \* From page 8 of the Raft paper: "If two logs contain an entry with the same index and term, then the logs are identical in all preceding entries."
 LogMatchingInv ==
-    \A i, j \in Server : i /= j =>
+    \A i, j \in Servers : i /= j =>
         \A n \in 1..min(Len(log[i]), Len(log[j])) :
             log[i][n].term = log[j][n].term =>
             SubSeq(log[i],1,n) = SubSeq(log[j],1,n)
@@ -87,15 +87,15 @@ LogMatchingInv ==
 \* leader's log up to the leader's term (since a next Leader may already be
 \* elected without the old leader stepping down yet)
 LeaderCompletenessInv ==
-    \A i \in Server :
+    \A i \in Servers :
         state[i] = Leader =>
-        \A j \in Server : i /= j =>
+        \A j \in Servers : i /= j =>
             CheckIsPrefix(CommittedTermPrefix(j, currentTerm[i]),log[i])
             
     
 \* Committed log entries should never conflict between servers
 LogInv ==
-    \A i, j \in Server :
+    \A i, j \in Servers :
         \/ CheckIsPrefix(Committed(i),Committed(j)) 
         \/ CheckIsPrefix(Committed(j),Committed(i))
 
