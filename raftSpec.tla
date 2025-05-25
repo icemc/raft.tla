@@ -22,6 +22,10 @@ Receive(m) ==
           /\ \/ DropStaleResponse(i, j, m)
              \/ HandleRequestVoteResponse(i, j, m)
        \/ /\ m.mtype = AppendEntriesRequest
+          /\ i = netAggIndex
+          /\ NetAggReceivesAppendEntries(i, m)
+       \/ /\ m.mtype = AppendEntriesRequest
+          /\ i /= netAggIndex
           /\ HandleAppendEntriesRequest(i, j, m)
        \/ /\ m.mtype = AppendEntriesResponse
           /\ \/ DropStaleResponse(i, j, m)
@@ -35,7 +39,7 @@ Next ==
            \/ \E i \in Server : BecomeLeader(i)
            \/ \E i \in Server, v \in Value : state[i] = Leader /\ SwitchClientRequest(i, v)
            \/ \E i \in Server : AdvanceCommitIndex(i)
-           \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
+\*           \/ \E i,j \in Server : i /= j /\ AppendEntries(i, j)
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
                     msg.mtype \in {RequestVoteRequest, RequestVoteResponse, AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
 \*           \/ \E m \in {msg \in ValidMessage(messages) : 
@@ -50,13 +54,19 @@ MyNext ==
            \/ \E v \in DOMAIN switchBuffer, s \in Servers: SwitchClientRequestReplicate(s, v) 
            
            \/ \E s \in Servers, v \in DOMAIN switchBuffer: state[s] = Leader  /\ LeaderIngressHovercRaftRequest(s, v)
-                 
-           \/ \E i \in Servers: AdvanceCommitIndex(i)
            
-           \/ \E i,j \in Servers: i /= j  /\ AppendEntries(i, j)
+\*           \/ \E m \in {msg \in ValidMessage(messages) : 
+\*                    msg.mtype \in {AppendEntriesRequest}} : m.mdest = netAggIndex /\ NetAggReceivesAppendEntries(m.mdest, m)
+           \/ \E i \in Server: AdvanceCommitIndex(i)
+                    
+           \/ \E m \in {msg \in ValidMessage(messages) : 
+                    msg.mtype \in {AppendEntriesRequest}} : Receive(m)
+                 
+           
+           \/ \E i,j \in Servers, m \in DOMAIN netAggSentCache: i /= j  /\ AppendEntries(i, j, m)
            
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
-                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
+                    msg.mtype \in {AppendEntriesResponse}} : Receive(m)
            
           
 

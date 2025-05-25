@@ -9,7 +9,7 @@ CONSTANTS Server
 CONSTANTS Value
 
 \* Server states.
-CONSTANTS Follower, Candidate, Leader, Switch
+CONSTANTS Follower, Candidate, Leader, Switch, NetAgg
 
 \* A reserved value.
 CONSTANTS Nil
