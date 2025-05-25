@@ -15,7 +15,20 @@ WithMessage(m, msgs) ==
        \* [msgs EXCEPT ![m] = IF msgs[m] < 2 THEN msgs[m] + 1 ELSE 2 ]
     ELSE
         msgs @@ (m :> 1)
-
+        
+RECURSIVE WithMessages(_, _, _)
+WithMessages(message, receiversSet, msgs) ==
+    IF receiversSet = {} THEN  (* Base case: receivers set is empty *)
+        msgs       (* No more messages to send, this part of the action is complete *)
+    ELSE
+        LET
+            receiverToProcess == CHOOSE r \in receiversSet : TRUE
+            remainingReceivers == receiversSet \ {receiverToProcess}
+            changeSender == [message EXCEPT !.msource = netAggIndex]
+            messageToSend == [changeSender EXCEPT !.mdest = receiverToProcess]
+        IN WithMessages(message, remainingReceivers, WithMessage(messageToSend, msgs))                     
+             
+             
 WithoutMessage(m, msgs) ==
     IF m \in DOMAIN msgs THEN
         [msgs EXCEPT ![m] = IF msgs[m] > 0 THEN msgs[m] - 1 ELSE 0 ]
@@ -23,8 +36,11 @@ WithoutMessage(m, msgs) ==
         msgs
 
 \* Add a message to the bag of messages.
-Send(m) == messages' = WithMessage(m, messages)                      
-                      
+Send(m) == messages' = WithMessage(m, messages)
+
+
+SendMultiple(message, receiversSet, msgs) == messages' = WithoutMessage(message, WithMessages(message, receiversSet, msgs))
+       
 \* Remove a message from the bag of messages. Used when a server is done
 \* processing a message.
 Discard(m) == messages' = WithoutMessage(m, messages)

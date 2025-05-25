@@ -25,7 +25,7 @@ Receive(m) ==
           /\ HandleAppendEntriesRequest(i, j, m)
        \/ /\ m.mtype = AppendEntriesResponse
           /\ \/ DropStaleResponse(i, j, m)
-             \/ HandleAppendEntriesResponse(i, j, m)
+             \/ HandleAppendEntriesResponse2(i, j, m)
 
 \* Defines how the variables may transition.
 Next == 
@@ -45,18 +45,25 @@ Next ==
 
                   
 MyNext == 
+           \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
+                    msg.mtype \in {AppendEntriesRequest}} : NetAggReceivesAppendEntries(m.mdest, m)
+           
+           \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
+                    msg.mtype \in {AppendEntriesRequest}} : m.mdest /= netAggIndex /\ Receive(m)
+               
            \/ \E v \in Value, s \in Servers: state[s] = Leader /\ SwitchClientRequest(s, v)
            
            \/ \E v \in DOMAIN switchBuffer, s \in Servers: SwitchClientRequestReplicate(s, v) 
            
-           \/ \E s \in Servers, v \in DOMAIN switchBuffer: state[s] = Leader  /\ LeaderIngressHovercRaftRequest(s, v)
+           \/ \E s \in Servers, v \in DOMAIN switchBuffer: state[s] = Leader  /\ LeaderIngressHovercRaftRequest2(s, v)
                  
            \/ \E i \in Servers: AdvanceCommitIndex(i)
            
-           \/ \E i,j \in Servers: i /= j  /\ AppendEntries(i, j)
+\*           \/ \E i,j \in Servers: i /= j  /\ AppendEntries(i, j)
            
+              
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
-                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
+                    msg.mtype \in {AppendEntriesResponse}} : Receive(m)
            
           
 

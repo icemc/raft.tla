@@ -140,7 +140,7 @@ SwitchClientRequest(i, v) ==
             /\ maxc' = maxc + 1
             /\ switchBuffer' = switchBuffer @@ (v :> entry)
            ELSE UNCHANGED <<maxc, switchBuffer>>
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats, switchIndex, switchSentRecord, unorderedRequest, Servers>>
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, leaderCount, entryCommitStats, switchIndex, netAggIndex, switchSentRecord, unorderedRequest, Servers>>
 
 
 SwitchClientRequestReplicate(i, v) == 
@@ -148,7 +148,7 @@ SwitchClientRequestReplicate(i, v) ==
     /\ ~(\E entry \in switchSentRecord[i]: entry = <<switchBuffer[v].value, switchBuffer[v].term>>)
     /\ switchSentRecord' = [switchSentRecord EXCEPT ![i] = switchSentRecord[i] \cup {<<switchBuffer[v].value, switchBuffer[v].term>>} ]
     /\ unorderedRequest' = [unorderedRequest EXCEPT ![i] = unorderedRequest[i] \cup {switchBuffer[v].value} ]
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, switchIndex, switchBuffer, Servers>> 
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars, instrumentationVars, switchIndex, netAggIndex, switchBuffer, Servers>> 
 
 \* Leader Receives request from switch and appends it to its log. This will trigger Append Entries to be sent
 LeaderIngressHovercRaftRequest(i, v) == 
@@ -171,7 +171,51 @@ LeaderIngressHovercRaftRequest(i, v) ==
               IF newEntryIndex > 0 \* Only add stats for truly new entries
               THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ])
               ELSE entryCommitStats
-    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount, maxc, switchBuffer, switchIndex, switchSentRecord, Servers>>
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, commitIndex, leaderCount, maxc, switchBuffer, switchIndex, netAggIndex, switchSentRecord, Servers>>
+
+\* Leader Receives request from switch and appends it to its log. This will trigger Append Entries to be sent
+LeaderIngressHovercRaftRequest2(i, v) == 
+    /\ state[i] = Leader
+\*    /\ ~(\E msg \in DOMAIN messages: msg.mdest = netAggIndex /\ messages[msg] > 0)
+    
+    /\ \E j \in DOMAIN switchBuffer: v = j \* Check if v is a valid switch request
+    /\ \E j \in unorderedRequest[i] : v = j \* Check if leader server has already received request v from switch
+    /\ ~(\E j \in DOMAIN log[i] : log[i][j] = switchBuffer[v])
+\*    TODO add enabling condition that checks if value v has been sent to all servers (check switchSentRecords)
+\*    /\ \A s \in Server: (state[s] = Switch) \/ (state[s] /= Switch /\ v \in unorderedRequest[s])
+    /\ LET entryTerm == switchBuffer[v].term
+           entry == switchBuffer[v]
+           entries == << [term |-> entry.term, value |-> entry.value] >>
+\*           entryExist == \E j \in DOMAIN log[i] : log[i][j] = switchBuffer[v]
+           newLog == Append(log[i], entry)
+           newEntryIndex == Len(log[i]) + 1
+           prevLogIndex == newEntryIndex - 1
+           prevLogTerm == IF prevLogIndex > 0 THEN
+                              log[i][prevLogIndex].term
+                          ELSE 0
+           newEntryKey == <<newEntryIndex, entryTerm>>
+           message == [mtype          |-> AppendEntriesRequest,
+                mterm          |-> currentTerm[i],
+                mprevLogIndex  |-> prevLogIndex,
+                mprevLogTerm   |-> prevLogTerm,
+                mentries       |-> entries, \* This now only contains metadata information and not the entire request
+                
+                \* mlog is used as a history variable for the proof.
+                \* It would not exist in a real implementation.
+\*                mlog           |-> log[i],
+                mcommitIndex   |-> Min({commitIndex[i], newEntryIndex}), \* lastEntry}),
+                msource        |-> i,
+                mdest          |-> netAggIndex]
+       IN Send(message)
+        /\ log' = [log EXCEPT ![i] = newLog]
+        /\ unorderedRequest' = [unorderedRequest EXCEPT ![i] = @ \ {v}]
+        /\ entryCommitStats' =
+              IF newEntryIndex > 0 \* Only add stats for truly new entries
+              THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ])
+              ELSE entryCommitStats
+\*   Should leader still be responsible for initializing entryCommitStats?
+\*   After sending this to switch, shouldn't leader increase its matchCommitIndex and nextIndex values?           
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, commitIndex, leaderCount, maxc, switchBuffer, switchIndex, netAggIndex, switchSentRecord, Servers>>
 
 
 \* Modified. Leader i sends j an AppendEntries request containing exactly 1 entry. It was up to 1 entry.
@@ -212,6 +256,26 @@ AppendEntries(i, j) ==
             IF entryKey \in DOMAIN entryCommitStats /\ ~entryCommitStats[entryKey].committed
             THEN [entryCommitStats EXCEPT ![entryKey].sentCount = @ + 1]
             ELSE entryCommitStats         
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, maxc, leaderCount, hovercraftVars, Servers>>  
+
+\*NetAggReceivesAppendEntries()
+\* Modified. NetAgg receives AppendEntries message from Leader and fowards to all servers except Leader
+NetAggReceivesAppendEntries(i, m) ==  
+    /\ state[i] = NetAgg
+    /\ state[m.msource] = Leader
+    /\ m.mentries /= <<>>
+    /\ LET leader == CHOOSE s \in Servers: state[s] = Leader
+           entry == Head(m.mentries)
+           entryKey == <<m.mprevLogIndex + 1, entry.term>> \* Assumming all append entries are sent at once
+        IN               
+        
+\*        /\ Send(newMessage)
+        /\ SendMultiple(m, (Servers \ {leader}), messages)
+        /\ entryCommitStats' =
+            IF entryKey \in DOMAIN entryCommitStats /\ ~entryCommitStats[entryKey].committed
+            THEN [entryCommitStats EXCEPT ![entryKey].sentCount = @ + Cardinality(Servers \ {leader})]
+            ELSE entryCommitStats
+        /\ PrintT("Enabling Conditions passed") 
     /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, maxc, leaderCount, hovercraftVars, Servers>>  
 
 \* Server i receives an AppendEntries request from server j with
@@ -300,7 +364,7 @@ HandleAppendEntriesRequest(i, j, m) ==
                           IN /\ log' = [log EXCEPT ![i] = Append(log[i], entry)] \* Add this entry to log, this includes the payload
                              /\ unorderedRequest' = [unorderedRequest EXCEPT ![i] = @ \ {m.mentries[1].value}]
                        /\ UNCHANGED <<serverVars, commitIndex, messages>>
-       /\ UNCHANGED <<candidateVars, leaderVars, instrumentationVars, switchBuffer, switchIndex, switchSentRecord, Servers>> \* entryCommitStats unchanged on followers
+       /\ UNCHANGED <<candidateVars, leaderVars, instrumentationVars, switchBuffer, switchIndex, netAggIndex, switchSentRecord, Servers>> \* entryCommitStats unchanged on followers
 
 \* Server i receives an AppendEntries response from server j with
 \* m.mterm = currentTerm[i].
@@ -329,13 +393,75 @@ HandleAppendEntriesResponse(i, j, m) ==
     /\ Discard(m)
     /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, hovercraftVars, Servers>>
 
-\* Leader i advances its commitIndex.
+
+\* Server i (NetAgg) receives an AppendEntries response from server j with
+HandleAppendEntriesResponse2(i, j, m) ==
+    /\ state[i] = NetAgg
+    /\ m.mdest = NetAgg
+    /\ \/ /\ m.msuccess \* successful
+          /\ LET \*newMatchIndex == IF matchIndex[i][j] > m.mmatchIndex THEN matchIndex[i][j] ELSE m.mmatchIndex
+                 leader == CHOOSE s \in Servers: state[s] = Leader
+                 newMatchIndex == m.mmatchIndex
+                 entryKey == IF newMatchIndex > 0 /\ newMatchIndex <= Len(log[leader])
+                              THEN <<newMatchIndex, m.mterm>>
+                              ELSE <<0, 0>> \* Invalid index or empty log
+             IN \*/\ nextIndex'  = [nextIndex  EXCEPT ![i][j] = newMatchIndex + 1]
+                /\ nextIndex'  = [nextIndex  EXCEPT ![leader][j] = m.mmatchIndex + 1]
+                /\ matchIndex' = [matchIndex EXCEPT ![leader][j] = m.mmatchIndex]
+                \*/\ matchIndex' = [matchIndex EXCEPT ![i][j] = newMatchIndex]
+                /\ entryCommitStats' =
+                     IF /\ entryKey /= <<0, 0>>
+                        /\ entryKey \in DOMAIN entryCommitStats
+                        /\ ~entryCommitStats[entryKey].committed
+                     THEN [entryCommitStats EXCEPT ![entryKey].ackCount = @ + 1]
+                     ELSE entryCommitStats                     
+       \/ /\ \lnot m.msuccess \* not successful
+          /\ LET leader == CHOOSE s \in Servers: state[s] = Leader
+             IN nextIndex' = [nextIndex EXCEPT ![leader][j] =
+                               Max({nextIndex[leader][j] - 1, 1})]
+          /\ UNCHANGED <<matchIndex, entryCommitStats>>
+    /\ Discard(m)
+    /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, hovercraftVars, Servers>>
+    
+\* NetAgg advances leaders commitIndex.
 \* This is done as a separate step from handling AppendEntries responses,
 \* in part to minimize atomic regions, and in part so that leaders of
 \* single-server clusters are able to mark entries committed.
 AdvanceCommitIndex(i) ==
     /\ state[i] = Leader
     /\ LET \* The set of servers that agree up through index.
+           Agree(index) == {i} \cup {k \in Servers :
+                                         matchIndex[i][k] >= index}
+           \* The maximum indexes for which a quorum agrees
+           agreeIndexes == {index \in 1..Len(log[i]) :
+                                Agree(index) \in Quorum}
+           \* New value for commitIndex'[i]
+           newCommitIndex ==
+              IF /\ agreeIndexes /= {}
+                 /\ log[i][Max(agreeIndexes)].term = currentTerm[i]
+              THEN
+                  Max(agreeIndexes)
+              ELSE
+                  commitIndex[i]
+           committedIndexes == { k \in Nat : /\ k > commitIndex[i]
+                                             /\ k <= newCommitIndex }
+           \* Identify the keys in entryCommitStats corresponding to newly committed entries
+           keysToUpdate == { key \in DOMAIN entryCommitStats : key[1] \in committedIndexes }           
+       IN /\ commitIndex' = [commitIndex EXCEPT ![i] = newCommitIndex]
+          \* Update the 'committed' flag for the relevant entries in entryCommitStats
+          /\ entryCommitStats' =
+               [ key \in DOMAIN entryCommitStats |->
+                   IF key \in keysToUpdate
+                   THEN [ entryCommitStats[key] EXCEPT !.committed = TRUE ] \* Update record
+                   ELSE entryCommitStats[key] ]                             \* Keep old record 
+        \*   /\ PrintT("AdvanceCommitIndex: newCommitIndex=" \o ToString(newCommitIndex))       
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, log, maxc, leaderCount, hovercraftVars, Servers>>
+
+
+AdvanceCommitIndex2(n) ==
+    /\ state[n] = NetAgg
+    /\ LET \* The set of servers that agree up through index.
+           i == CHOOSE s \in Servers: state[s] = Leader
            Agree(index) == {i} \cup {k \in Servers :
                                          matchIndex[i][k] >= index}
            \* The maximum indexes for which a quorum agrees

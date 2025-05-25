@@ -27,15 +27,17 @@ Init == /\ messages = [m \in {} |-> 0]
 
 \* MyInit remains unchanged for the core Raft state, entryCommitStats is handled in Init.
 MyInit ==
-    LET ServerIds == CHOOSE ids \in [1..4 -> Server] :
-                        \A i, j \in 1..4 : i # j => ids[i] # ids[j]
+    LET ServerIds == CHOOSE ids \in [1..5 -> Server] :
+                        \A i, j \in 1..5 : i # j => ids[i] # ids[j]
         r1 == ServerIds[1]
         r2 == ServerIds[2]
         r3 == ServerIds[3]
         r4 == ServerIds[4]
+        r5 == ServerIds[5]
     IN
     /\ switchIndex = r1
-    /\ Servers = Server \ {r1}
+    /\ netAggIndex = r2
+    /\ Servers = Server \ {r1, r2}
     /\ commitIndex = [s \in Server |-> 0]
     /\ currentTerm = [s \in Server |-> 2]
     /\ leaderCount = [s \in Server |-> IF s = r2 THEN 1 ELSE 0]
@@ -46,12 +48,13 @@ MyInit ==
     /\ nextIndex = [s \in Server |-> [t \in Server |-> 1]]
     /\ state = [s \in Server |->
               CASE s = switchIndex -> Switch
-              [] s = r2 -> Leader
+              [] s = r2 -> NetAgg
+              [] s = r3 -> Leader
               [] OTHER  -> Follower]
-    /\ votedFor = [s \in Server |-> IF s = r2 THEN Nil ELSE r2]
-    /\ voterLog = [s \in Server |-> IF s = r2 THEN (r3 :> <<>> @@ r4 :> <<>>) ELSE <<>>]
-    /\ votesGranted = [s \in Server |-> IF s = r2 THEN {r3, r4} ELSE {}]
-    /\ votesResponded = [s \in Server |-> IF s = r2 THEN {r3, r4} ELSE {}]
+    /\ votedFor = [s \in Server |-> IF s = r3 THEN Nil ELSE r3]
+    /\ voterLog = [s \in Server |-> IF s = r3 THEN (r4 :> <<>> @@ r5 :> <<>>) ELSE <<>>]
+    /\ votesGranted = [s \in Server |-> IF s = r3 THEN {r4, r5} ELSE {}]
+    /\ votesResponded = [s \in Server |-> IF s = r3 THEN {r4, r5} ELSE {}]
     /\ entryCommitStats = [ idx_term \in {} |-> [ sentCount |-> 0, ackCount |-> 0, committed |-> FALSE ] ] \* Initialize here too
     /\ switchSentRecord = [s \in Server |-> {} ]
     /\ unorderedRequest = [s \in Server |-> {} ]
