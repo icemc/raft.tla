@@ -1,4 +1,4 @@
---------------------------- MODULE hovercraft ---------------------------
+--------------------------- MODULE hovercraft_024581674A ---------------------------
 
 EXTENDS Naturals, FiniteSets, Sequences, TLC
 
@@ -16,7 +16,7 @@ CONSTANTS Nil
 
 \* Message types:
 CONSTANTS RequestVoteRequest, RequestVoteResponse,
-          AppendEntriesRequest, AppendEntriesResponse
+          AppendEntriesRequest, AppendEntriesResponse, RecoveryRequest
 
 \* for instrumentation to limit model state space
 CONSTANTS MaxClientRequests
@@ -409,6 +409,7 @@ SwitchClientRequest(i, v) ==
 
 
 SwitchClientRequestReplicate(i, v) == 
+    /\ state[i] = Leader \* Comment this out to send message to all servers
     /\ \E j \in DOMAIN switchBuffer: j = v \* Check if v is a valid switch request
     /\ ~(\E entry \in switchSentRecord[i]: entry = <<switchBuffer[v].value, switchBuffer[v].term>>)
     /\ switchSentRecord' = [switchSentRecord EXCEPT ![i] = switchSentRecord[i] \cup {<<switchBuffer[v].value, switchBuffer[v].term>>} ]
@@ -548,13 +549,19 @@ HandleAppendEntriesRequest(i, j, m) ==
 \*                                          log[i][index2]]
 \*                          IN log' = [log EXCEPT ![i] = new]
                        /\ UNCHANGED <<serverVars, commitIndex, messages, unorderedRequest>>
-                       
-\*                   \/ \* no conflict: append entry
-\*                       /\ m.mentries /= << >>
-\*                       /\ Len(log[i]) = m.mprevLogIndex
-\*                       /\ log' = [log EXCEPT ![i] =
-\*                                      Append(log[i], m.mentries[1])]
-\*                       /\ UNCHANGED <<serverVars, commitIndex, messages>>
+
+                   \/ \* no conflict but server i can't find request in its unorder requests list. Send recovery message to Server j
+                       /\ m.mentries /= << >>
+                       \* request not found in servers unordered request list
+                       /\ ~(\E k \in unorderedRequest[i]: k = m.mentries[1].value)                      
+                       /\ LET message == [mtype     |-> RecoveryRequest,
+                                          mterm          |-> currentTerm[i],
+                                          mentries       |-> m.mentries,
+                                          msource         |-> i,
+                                          mdest           |-> j]
+                          IN Send(message)
+                          \* Do not discard the append entries request
+                       /\ UNCHANGED <<serverVars, commitIndex, log, unorderedRequest>>
                        
                    \/ \* no conflict: append entry
                        /\ m.mentries /= << >>
@@ -593,6 +600,17 @@ HandleAppendEntriesResponse(i, j, m) ==
           /\ UNCHANGED <<matchIndex, entryCommitStats>>
     /\ Discard(m)
     /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, hovercraftVars, Servers>>
+
+\* Server i receives RecoveryRequest message from server j
+HandleRecoveryRequest(i, j, m) ==
+    /\ m.mterm = currentTerm[i]
+    /\ m.mtype = RecoveryRequest
+    /\ m.mentries /= << >>
+    /\ \E entry \in DOMAIN switchBuffer: entry = m.mentries[1].value \* Check that this entry has been received by switch
+    /\ Discard(m)
+    /\ unorderedRequest' = [unorderedRequest EXCEPT ![j] = unorderedRequest[j] \cup {switchBuffer[m.mentries[1].value].value} ] \* Snoop the value request from switchBuffer
+
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, instrumentationVars, switchBuffer, switchIndex, switchSentRecord, Servers>>
 
 \* Leader i advances its commitIndex.
 \* This is done as a separate step from handling AppendEntries responses,
@@ -657,6 +675,8 @@ Receive(m) ==
        \/ /\ m.mtype = AppendEntriesResponse
           /\ \/ DropStaleResponse(i, j, m)
              \/ HandleAppendEntriesResponse(i, j, m)
+       \/ /\ m.mtype = RecoveryRequest
+               /\ HandleRecoveryRequest(i, j, m)
 
 \* Defines how the variables may transition.
 Next == 
@@ -687,7 +707,7 @@ MyNext ==
            \/ \E i,j \in Servers: i /= j  /\ AppendEntries(i, j)
            
            \/ \E m \in {msg \in ValidMessage(messages) : \* to visualize possible messages
-                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse}} : Receive(m)
+                    msg.mtype \in {AppendEntriesRequest, AppendEntriesResponse, RecoveryRequest}} : Receive(m)
            
           
 
@@ -790,6 +810,47 @@ MessageSent == \A i,j \in DOMAIN messages:
 
 
 AllMessagesNotConsumed == messages = <<>> \/ Cardinality(DOMAIN messages) < 8 \/ \E m \in DOMAIN messages: messages[m] /= 0
+
+
+\* MV CONSTANT declarations@modelParameterConstants
+CONSTANTS
+v1, v2
+----
+
+\* MV CONSTANT declarations@modelParameterConstants
+CONSTANTS
+r1, r2, r3, r4
+----
+
+\* MV CONSTANT definitions Value
+const_1748418873615241000 == 
+{v1, v2}
+----
+
+\* MV CONSTANT definitions Server
+const_1748418873615242000 == 
+{r1, r2, r3, r4}
+----
+
+\* CONSTANT definitions @modelParameterConstants:3MaxTerm
+const_1748418873615243000 == 
+2
+----
+
+\* CONSTANT definitions @modelParameterConstants:7MaxBecomeLeader
+const_1748418873615244000 == 
+1
+----
+
+\* CONSTANT definitions @modelParameterConstants:14MaxClientRequests
+const_1748418873615245000 == 
+5
+----
+
+\* CONSTRAINT definition @modelParameterContraint:0
+constr_17481887456891071000 ==
+MyConstraint
+----
 
 =============================================================================
 \* Created by Ludovic Temgoua Abanda N.
