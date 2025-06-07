@@ -1,0 +1,2767 @@
+[
+ _TEAction |-> [
+   position |-> 1,
+   name |-> "Initial predicate",
+   location |-> "Unknown location"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> << >>,
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> (r1 :> <<>> @@ r2 :> <<>> @@ r3 :> <<>> @@ r4 :> <<>> @@ r5 :> <<>>),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 0,
+ messages |-> << >>,
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> << >>,
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 2,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1120, col 7 to line 1121, col 67 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> << >>,
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> (r1 :> <<>> @@ r2 :> <<>> @@ r3 :> <<>> @@ r4 :> <<>> @@ r5 :> <<>>),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 0,
+ messages |-> << >>,
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> (<<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1]),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 3,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1120, col 7 to line 1121, col 67 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> << >>,
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> (r1 :> <<>> @@ r2 :> <<>> @@ r3 :> <<>> @@ r4 :> <<>> @@ r5 :> <<>>),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 0,
+ messages |-> << >>,
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 4,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1130, col 7 to line 1131, col 64 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> << >>,
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> (r1 :> <<>> @@ r2 :> <<>> @@ r3 :> <<>> @@ r4 :> <<>> @@ r5 :> <<>>),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 0,
+ messages |-> << >>,
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> ( r1 :> {<<v1, 2>>, <<v2, 2>>} @@
+  r2 :> {} @@
+  r3 :> {<<v1, 2>>} @@
+  r4 :> {} @@
+  r5 :> {} ),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 5,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1130, col 7 to line 1131, col 64 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> << >>,
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> (r1 :> <<>> @@ r2 :> <<>> @@ r3 :> <<>> @@ r4 :> <<>> @@ r5 :> <<>>),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 0,
+ messages |-> << >>,
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> ( r1 :> {<<v1, 2>>, <<v2, 2>>} @@
+  r2 :> {} @@
+  r3 :> {<<v1, 2>>, <<v2, 2>>} @@
+  r4 :> {} @@
+  r5 :> {} ),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 6,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1133, col 7 to line 1134, col 64 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> (<<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE]),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r4 :> <<>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 1,
+ messages |-> << >>,
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> ( r1 :> {<<v1, 2>>, <<v2, 2>>} @@
+  r2 :> {} @@
+  r3 :> {<<v2, 2>>} @@
+  r4 :> {} @@
+  r5 :> {} ),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 7,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1133, col 7 to line 1134, col 64 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> << >>,
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 8,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1137, col 7 to line 1138, col 53 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> AppendEntriesNetAggRequest,
+    msource |-> r3,
+    mdest |-> r2,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    mentryIndex |-> 1 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 9,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1144, col 7 to line 1145, col 82 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 10,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 11,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 12,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 13,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesResponse,
+    msource |-> r4,
+    mdest |-> r2,
+    msuccess |-> TRUE,
+    mmatchIndex |-> 1 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 14,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesResponse,
+    msource |-> r4,
+    mdest |-> r2,
+    msuccess |-> TRUE,
+    mmatchIndex |-> 1 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r5,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 15,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesResponse,
+    msource |-> r4,
+    mdest |-> r2,
+    msuccess |-> TRUE,
+    mmatchIndex |-> 1 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r5,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 16,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v1, payload |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesResponse,
+    msource |-> r4,
+    mdest |-> r2,
+    msuccess |-> TRUE,
+    mmatchIndex |-> 1 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r5,
+    mdest |-> r3,
+    mlog |-> <<>>,
+    mentries |-> <<[term |-> 2, value |-> v1]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 0,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 1,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 17,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1153, col 7 to line 1156, col 44 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 18,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1159, col 7 to line 1160, col 69 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 1] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 19,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1137, col 7 to line 1138, col 53 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 1] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesNetAggRequest,
+    msource |-> r3,
+    mdest |-> r2,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    mentryIndex |-> 2 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 20,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1144, col 7 to line 1145, col 82 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 2,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 21,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 2,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 22,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 2,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 23,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 2,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 24,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesResponse,
+    msource |-> r4,
+    mdest |-> r2,
+    msuccess |-> TRUE,
+    mmatchIndex |-> 2 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 2,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 25,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesResponse,
+    msource |-> r4,
+    mdest |-> r2,
+    msuccess |-> TRUE,
+    mmatchIndex |-> 2 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r5,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 2,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 26,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r4,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesResponse,
+    msource |-> r4,
+    mdest |-> r2,
+    msuccess |-> TRUE,
+    mmatchIndex |-> 2 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r4,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryRequest,
+    msource |-> r5,
+    mdest |-> r3,
+    mlog |-> <<[term |-> 2, value |-> v1, payload |-> v1]>>,
+    mentries |-> <<[term |-> 2, value |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r4,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 1,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 1 @@ r5 :> 0),
+ netAggPendingEntries |-> { [ ackCount |-> 0,
+    entryTerm |-> 2,
+    entryIndex |-> 2,
+    leaderId |-> r3,
+    acksFrom |-> {} ] },
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 27,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1153, col 7 to line 1156, col 44 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> FALSE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 1 @@ r5 :> 1) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 2] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 2] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 2] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 2,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 2 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 28,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1159, col 7 to line 1160, col 69 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 2 @@ r4 :> 1 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :> <<[term |-> 2, value |-> v1, payload |-> v1]>> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 2] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 2] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 2] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 2,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 2 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 3 @@ r5 :> 3) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 29,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1148, col 7 to line 1150, col 18 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 2 @@ r4 :> 1 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 2] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 2] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 2] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 2,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 2 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 3 @@ r5 :> 3) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 30,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1159, col 7 to line 1160, col 69 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 0),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 2] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 2] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 2] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 2,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 2 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 3 @@ r5 :> 3) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+],
+[
+ _TEAction |-> [
+   position |-> 31,
+   name |-> "MySwitchPlusPlusNext",
+   location |-> "line 1159, col 7 to line 1160, col 69 of module hovercraft"
+ ],
+ Servers |-> {r3, r4, r5},
+ commitIndex |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ currentTerm |-> (r1 :> 2 @@ r2 :> 2 @@ r3 :> 2 @@ r4 :> 2 @@ r5 :> 2),
+ entryCommitStats |-> ( <<1, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] @@
+  <<2, 2>> :> [sentCount |-> 0, ackCount |-> 0, committed |-> TRUE] ),
+ leaderCount |-> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 1 @@ r4 :> 0 @@ r5 :> 0),
+ log |-> ( r1 :> <<>> @@
+  r2 :> <<>> @@
+  r3 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r4 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> @@
+  r5 :>
+      << [term |-> 2, value |-> v1, payload |-> v1],
+         [term |-> 2, value |-> v2, payload |-> v2] >> ),
+ matchIndex |-> ( r1 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r2 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r3 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 2 @@ r5 :> 2) @@
+  r4 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) @@
+  r5 :> (r1 :> 0 @@ r2 :> 0 @@ r3 :> 0 @@ r4 :> 0 @@ r5 :> 0) ),
+ maxc |-> 2,
+ messages |-> ( [mtype |-> AggCommit, msource |-> r2, mdest |-> r3, mcommitIndex |-> 2] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r4, mcommitIndex |-> 2] :>
+      0 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 1] :>
+      1 @@
+  [mtype |-> AggCommit, msource |-> r2, mdest |-> r5, mcommitIndex |-> 2] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> EntriesRecoveryResponse,
+    msource |-> r3,
+    mdest |-> r5,
+    mentries |-> <<[term |-> 2, value |-> v2, payload |-> v2]>> ] :>
+      0 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 0,
+    mprevLogTerm |-> 0,
+    mentries |-> <<[term |-> 2, value |-> v1]>>,
+    mcommitIndex |-> 0,
+    moriginalLeader |-> r3 ] :>
+      1 @@
+  [ mterm |-> 2,
+    mtype |-> AppendEntriesRequest,
+    msource |-> r2,
+    mdest |-> r5,
+    mlog |->
+        << [term |-> 2, value |-> v1, payload |-> v1],
+           [term |-> 2, value |-> v2, payload |-> v2] >>,
+    mprevLogIndex |-> 1,
+    mprevLogTerm |-> 2,
+    mentries |-> <<[term |-> 2, value |-> v2]>>,
+    mcommitIndex |-> 1,
+    moriginalLeader |-> r3 ] :>
+      1 ),
+ netAggCommitIndex |-> 2,
+ netAggIndex |-> r2,
+ netAggMatchIndex |-> (r3 :> 0 @@ r4 :> 2 @@ r5 :> 0),
+ netAggPendingEntries |-> {},
+ nextIndex |-> ( r1 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r2 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r3 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 3 @@ r5 :> 3) @@
+  r4 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) @@
+  r5 :> (r1 :> 1 @@ r2 :> 1 @@ r3 :> 1 @@ r4 :> 1 @@ r5 :> 1) ),
+ state |-> ( r1 :> Switch @@
+  r2 :> NetAgg @@
+  r3 :> Leader @@
+  r4 :> Follower @@
+  r5 :> Follower ),
+ switchBuffer |-> ( <<v1, 2>> :> [term |-> 2, value |-> v1, payload |-> v1] @@
+  <<v2, 2>> :> [term |-> 2, value |-> v2, payload |-> v2] ),
+ switchIndex |-> r1,
+ switchSentRecord |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {<<v1, 2>>, <<v2, 2>>} @@ r4 :> {} @@ r5 :> {}),
+ unorderedRequests |-> (r1 :> {<<v1, 2>>, <<v2, 2>>} @@ r2 :> {} @@ r3 :> {} @@ r4 :> {} @@ r5 :> {}),
+ votedFor |-> (r1 :> r3 @@ r2 :> r3 @@ r3 :> Nil @@ r4 :> r3 @@ r5 :> r3),
+ voterLog |-> ( r1 :> << >> @@
+  r2 :> << >> @@
+  r3 :> (r4 :> <<>> @@ r5 :> <<>>) @@
+  r4 :> << >> @@
+  r5 :> << >> ),
+ votesGranted |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {}),
+ votesResponded |-> (r1 :> {} @@ r2 :> {} @@ r3 :> {r4, r5} @@ r4 :> {} @@ r5 :> {})
+]
