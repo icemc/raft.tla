@@ -564,6 +564,57 @@ LeaderIngestHovercRaftRequest(i, vt) ==
                    commitIndex, leaderCount, switchIndex, switchBuffer, 
                    Servers, switchSentRecord, netAggVars>>
 
+\* Leader i ingests a request v that has been replicated to its unordered set and sends append entries to NetAgg.
+\* This is a better version than the previous as it directly sends a message to NetAgg upon new requests
+LeaderIngestHovercRaftRequestSendsAppendEntriesToNetAgg(i, vt) ==
+    /\ state[i] = Leader
+    /\ vt \in unorderedRequests[i]      \* Request ID is pending for the leader
+    /\ vt \in DOMAIN switchBuffer       \* Full request data exists in switch buffer to reduce payload duplication 
+    /\ maxc < MaxClientRequests
+    /\ LET entryFromBuffer == switchBuffer[vt]
+           v == vt[1]  \* Extract value from <<value, term>> pair
+           \* Use leader's current term, keep value and payload from buffer
+           newEntry == [term |-> currentTerm[i], 
+                        value |-> v, 
+                        payload |-> entryFromBuffer.payload]
+           entryExists == \E k \in DOMAIN log[i] : 
+                          log[i][k].value = v /\ log[i][k].term = newEntry.term
+           newLog == IF entryExists THEN log[i] ELSE Append(log[i], newEntry)
+           newEntryIndex == Len(log[i]) + 1
+           newEntryKey == <<newEntryIndex, newEntry.term>>
+           newEntryMetadata == [term |-> newEntry.term, value |-> newEntry.value]
+           entries == << newEntry >>
+           prevLogIndex == newEntryIndex - 1
+           prevLogTerm == IF prevLogIndex > 0 THEN
+                              log[i][prevLogIndex].term
+                          ELSE 0
+           
+       IN IF ~ entryExists THEN
+              /\ Send([mtype          |-> AppendEntriesNetAggRequest,
+                    mterm          |-> currentTerm[i],
+                    mprevLogIndex  |-> prevLogIndex,
+                    mprevLogTerm   |-> prevLogTerm,
+                    mentries       |-> entries,
+                    mentryIndex    |-> newEntryIndex,
+                    mlog           |-> log[i],
+                    mcommitIndex   |-> Min({commitIndex[i], newEntryIndex}),
+                    msource        |-> i,
+                    mdest          |-> netAggIndex])
+                /\ log' = [log EXCEPT ![i] = newLog]
+                /\ maxc' = maxc + 1
+                /\ unorderedRequests' = [unorderedRequests EXCEPT ![i] = @ \ {vt}]
+                /\ entryCommitStats' =
+                      IF newEntryIndex > 0
+                      THEN entryCommitStats @@ (newEntryKey :> [ sentCount |-> 0, 
+                                           ackCount |-> 0, committed |-> FALSE ])
+                      ELSE entryCommitStats
+                
+        
+         ELSE UNCHANGED <<messages, log, maxc, entryCommitStats, unorderedRequests>>
+    /\ UNCHANGED <<serverVars, candidateVars, leaderVars, 
+                   commitIndex, leaderCount, switchIndex, switchBuffer, 
+                   Servers, switchSentRecord, netAggVars>>
+
 
 \* Client sends a request to the Switch, which buffers it, 
 \* not yet replicated to servers
@@ -620,6 +671,28 @@ SwitchClientRequestReplicateAll(s, vt) ==
     /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars,
                    leaderCount, entryCommitStats, switchIndex, switchBuffer, 
                    maxc, Servers, netAggVars>>
+      
+\* For testing point to point recovery. 
+\* Switch sends request to leader only and followers will have to recover in case they receive AppendEntries from NetAgg
+SwitchClientRequestReplicateToLeaderOnly(s, vt) ==
+    /\ state[s] = Switch  \* Only the switch server can replicate requests
+    /\ vt \in unorderedRequests[s] \* Request must be pending at the switch
+    /\ LET \* Find all servers that haven't received this v/term pair yet
+           targetServers == {i \in Server : state[i] \notin {Switch, NetAgg, Follower} /\ vt \notin switchSentRecord[i]}
+       IN
+       /\ targetServers /= {}  \* At least one server needs the request
+       /\ unorderedRequests' = [i \in Server |->
+            IF i \in targetServers 
+            THEN unorderedRequests[i] \cup {vt}
+            ELSE unorderedRequests[i]]
+       /\ switchSentRecord' = [i \in Server |->
+            IF i \in targetServers
+            THEN switchSentRecord[i] \cup {vt}
+            ELSE switchSentRecord[i]]
+    /\ UNCHANGED <<messages, serverVars, candidateVars, leaderVars, logVars,
+                   leaderCount, entryCommitStats, switchIndex, switchBuffer, 
+                   maxc, Servers, netAggVars>>      
+
 
 \* Modified. Leader i sends j an AppendEntries request containing exactly 1 entry.
 \* While implementations may want to send more than 1 at a time, this spec uses
@@ -668,6 +741,7 @@ AppendEntries(i, j) ==
                    leaderCount, hovercraftVars, Servers, netAggVars>>
 
 \* Leader i sends AppendEntries to NetAgg instead of directly to followers
+\* This implimentation sends duplicate AppendEntries to NetAgg
 AppendEntriesToNetAgg(i) ==
     /\ state[i] = Leader
     /\ state[netAggIndex] = NetAgg
@@ -682,7 +756,7 @@ AppendEntriesToNetAgg(i) ==
            prevLogTerm == IF prevLogIndex > 0 THEN
                               log[i][prevLogIndex].term
                           ELSE 0
-       IN Send([mtype          |-> AppendEntriesNetAggRequest,
+       IN  Send([mtype          |-> AppendEntriesNetAggRequest,
                 mterm          |-> currentTerm[i],
                 mprevLogIndex  |-> prevLogIndex,
                 mprevLogTerm   |-> prevLogTerm,
@@ -694,7 +768,8 @@ AppendEntriesToNetAgg(i) ==
                 mdest          |-> netAggIndex])
     /\ UNCHANGED <<serverVars, candidateVars, leaderVars, logVars, 
                    instrumentationVars, hovercraftVars, netAggVars, Servers, netAggVars>>
-
+                   
+                   
 \* NetAgg receives AppendEntries from leader and forwards to all followers; atomic for now
 NetAggForwardAppendEntries(m, f) ==
     /\ state[f] = Follower
@@ -708,6 +783,7 @@ NetAggForwardAppendEntries(m, f) ==
                      mprevLogTerm   |-> m.mprevLogTerm,
                      mentries       |-> m.mentries,
                      mlog           |-> m.mlog,         \* Keep original leader's log for history/proof if needed
+                     mentryIndex    |-> m.mentryIndex,
                      mcommitIndex   |-> m.mcommitIndex,
                      msource        |-> netAggIndex,    \* <<< CHANGED: Source is NetAgg
                      mdest          |-> f,
@@ -736,6 +812,7 @@ NetAggForwardAppendEntriesAll(m) ==
                                   mprevLogTerm   |-> m.mprevLogTerm,
                                   mentries       |-> m.mentries,
                                   mlog           |-> m.mlog,
+                                  mentryIndex    |-> m.mentryIndex,
                                   mcommitIndex   |-> m.mcommitIndex,
                                   msource        |-> netAggIndex,
                                   mdest          |-> f,
@@ -847,8 +924,17 @@ HandleAppendEntriesRequest(i, j, m) ==
                  \/ /\ m.mprevLogIndex > 0
                     /\ m.mprevLogIndex <= Len(log[i])
                     /\ m.mprevLogTerm = log[i][m.mprevLogIndex].term
+        recoveryRequestInFlight == \E msg \in DOMAIN messages : 
+                                    /\ \/ (msg.mtype = AppendEntriesResponse /\ msg.mdest /= netAggIndex /\ msg.msource = i)  
+                                       \/ (msg.mtype = AppendEntriesRequest /\ msg.mdest = i /\ msg.msource /= netAggIndex)
+                                    /\ messages[msg] > 0
+        inLog == 
+            /\ m.mentries /= << >>  \* There must be an entry to check
+            /\ \E l \in DOMAIN log[i]: log[i][l].value = m.mentries[1].value /\ log[i][l].term = m.mentries[1].term
+        
         rejectHovercraftMismatchCondition == 
             /\ m.mentries /= << >>  \* There must be an entry to check
+            /\ \lnot inLog
             /\ LET entry == m.mentries[1]
                    v == entry.value 
                    msgTerm == entry.term 
@@ -859,12 +945,17 @@ HandleAppendEntriesRequest(i, j, m) ==
 \*        respondTo == IF j = netAggIndex 
 \*                     THEN netAggIndex \*should be j in hovercraft/Switch
 \*                     ELSE j
-        respondTo == IF m.msource = netAggIndex /\ ~logOk
+\*        respondTo == IF m.msource = netAggIndex /\ ~logOk
+\*                       THEN CHOOSE l \in Servers : state[l] = Leader
+\*                       ELSE m.msource
+        respondTo == IF m.msource = netAggIndex /\ (~logOk \/ rejectHovercraftMismatchCondition)
                        THEN CHOOSE l \in Servers : state[l] = Leader
                        ELSE m.msource
     IN /\ m.mterm <= currentTerm[i]
-       /\ \/ /\ \* reject request
-                \/ m.mterm < currentTerm[i]
+            
+       /\ \/ \* reject request
+            /\ \lnot recoveryRequestInFlight \* Proccess only if we are not currently in recovery mode
+            /\  \/ m.mterm < currentTerm[i]
                 \/ /\ m.mterm = currentTerm[i]
                    /\ state[i] = Follower
                    /\ \lnot logOk
@@ -874,7 +965,7 @@ HandleAppendEntriesRequest(i, j, m) ==
              /\ Reply([mtype           |-> AppendEntriesResponse,
                        mterm           |-> currentTerm[i],
                        msuccess        |-> FALSE,
-                       mmatchIndex     |-> 0,
+                       mmatchIndex     |-> IF respondTo = netAggIndex THEN 0 ELSE m.mentryIndex,
                        msource         |-> i,
                        mdest           |-> respondTo],
                        m)
@@ -885,7 +976,29 @@ HandleAppendEntriesRequest(i, j, m) ==
              /\ state' = [state EXCEPT ![i] = Follower]
              /\ UNCHANGED <<currentTerm, votedFor, logVars, messages, 
                             unorderedRequests>>
-          \/ \* accept request
+                            
+          \/ \* accept request (recovery mode)
+             /\ recoveryRequestInFlight \* Proccess only if we are currently in recovery mode
+             /\ m.mterm = currentTerm[i]
+             /\ m.msource /= netAggIndex
+             /\ state[i] = Follower
+             /\ logOk
+             /\ m.mentries /= << >>
+             /\ LET  message == [mtype           |-> AppendEntriesResponse,
+                                 mterm           |-> currentTerm[i],
+                                 msuccess        |-> TRUE,
+                                 mmatchIndex     |-> m.mprevLogIndex + Len(m.mentries),
+                                 msource         |-> i,
+                                 mdest           |-> netAggIndex]
+                IN
+                   /\ commitIndex' = [commitIndex EXCEPT ![i] = m.mcommitIndex]
+                   /\ log' = [log EXCEPT ![i] = Append(log[i], m.mentries[1])]
+                   /\ Reply(message, m) \* Reply directly to NetAgg 
+                   
+             /\ UNCHANGED <<serverVars, unorderedRequests>>
+             
+          \/ \* accept request (normal mode)
+             /\ \lnot recoveryRequestInFlight \* Proccess only if we are not currently in recovery mode
              /\ m.mterm = currentTerm[i]
              /\ state[i] = Follower
              /\ logOk
@@ -911,7 +1024,7 @@ HandleAppendEntriesRequest(i, j, m) ==
                                  mmatchIndex     |-> m.mprevLogIndex +
                                                      Len(m.mentries),
                                  msource         |-> i,
-                                 mdest           |-> respondTo],
+                                 mdest           |-> m.msource],
                                  m)
                        /\ UNCHANGED <<serverVars, log, unorderedRequests>>
                    \/ \* conflict: remove 1 entry 
@@ -925,10 +1038,11 @@ HandleAppendEntriesRequest(i, j, m) ==
                           IN log' = [log EXCEPT ![i] = newLog] \* Truncate log
                        /\ UNCHANGED <<serverVars, commitIndex, messages, 
                                       unorderedRequests>>
-                   \/ \* no conflict: append entry
+                   \/ \* no conflict & request is from NetAgg: append entry
                        /\ m.mentries /= << >>
                        /\ Len(log[i]) = m.mprevLogIndex
                        /\ \lnot rejectHovercraftMismatchCondition
+                       
                        /\ LET \* mark unorderedRequests done
                            entryMetadata == m.mentries[1]
                            v == entryMetadata.value
@@ -952,7 +1066,7 @@ HandleAppendEntriesRequest(i, j, m) ==
 \* m.mterm = currentTerm[i].
 HandleAppendEntriesResponse(i, j, m) ==
     /\ m.mterm = currentTerm[i]
-    /\ \/ /\ m.msuccess \* successful
+    /\ \/ /\ m.msuccess \* successful (kept for backward compatibility with hovercraft protocol)
           /\ LET
                  newMatchIndex == m.mmatchIndex
                  entryKey == IF newMatchIndex > 0 /\ newMatchIndex <= Len(log[i])
@@ -965,12 +1079,26 @@ HandleAppendEntriesResponse(i, j, m) ==
                         /\ entryKey \in DOMAIN entryCommitStats
                         /\ ~entryCommitStats[entryKey].committed
                      THEN [entryCommitStats EXCEPT ![entryKey].ackCount = @ + 1]
-                     ELSE entryCommitStats                     
-       \/ /\ \lnot m.msuccess \* not successful
-          /\ nextIndex' = [nextIndex EXCEPT ![i][j] =
-                               Max({nextIndex[i][j] - 1, 1})]
-          /\ UNCHANGED <<matchIndex, entryCommitStats>>
-    /\ Discard(m)
+                     ELSE entryCommitStats
+                /\ Discard(m)                     
+       \/ /\ \lnot m.msuccess \* not successful recovery should kick in. Resend AppendEntries with full payload
+          /\ LET entryIndex  == m.mmatchIndex
+                 entry == log[i][entryIndex]
+                 prevLogIndex == entryIndex - 1
+                 prevLogTerm == IF prevLogIndex > 0 THEN
+                                    log[i][prevLogIndex].term
+                                ELSE 0
+                 message == [mtype         |-> AppendEntriesRequest,
+                             mterm         |-> currentTerm[i],
+                             mprevLogIndex |-> prevLogIndex,
+                             mprevLogTerm  |-> prevLogTerm,
+                             mentries      |-> <<entry>>, \* Single entry recovery which includes payload
+                             mlog          |-> log[i],
+                             mcommitIndex  |-> entryIndex - 1,
+                             msource       |-> i,
+                             mdest         |-> j]
+             IN Reply(message, m)
+          /\ UNCHANGED <<nextIndex, matchIndex, entryCommitStats>>
     /\ UNCHANGED <<serverVars, candidateVars, logVars, maxc, leaderCount, hovercraftVars, Servers, netAggVars>>
 
 \* Leader i advances its commitIndex.
@@ -1048,15 +1176,24 @@ MySwitchPlusPlusNext ==
 \*   \/ \E i \in Servers,v \in DOMAIN switchBuffer : 
 \*        SwitchClientRequestReplicate(switchIndex, i, v)
 
+   
+\*   \* Enable this to test normal mode (All requests are sent from switch to followers) 
+\*   \/ \E v \in DOMAIN switchBuffer : 
+\*        SwitchClientRequestReplicateAll(switchIndex, v)
+
+   \* Enable this if you want to test point to point recovery. Note if enabled, the previous one should be disabled
    \/ \E v \in DOMAIN switchBuffer : 
-        SwitchClientRequestReplicateAll(switchIndex, v)
+        SwitchClientRequestReplicateToLeaderOnly(switchIndex, v)
+
+\*   \/ \E i \in Servers, v \in DOMAIN switchBuffer : 
+\*        state[i] = Leader /\ LeaderIngestHovercRaftRequest(i, v)
+\*   
+\*   \* NetAgg path: Leader sends to NetAgg instead of direct AppendEntries
+\*   \/ \E i \in Servers : 
+\*        state[i] = Leader /\ AppendEntriesToNetAgg(i)
 
    \/ \E i \in Servers, v \in DOMAIN switchBuffer : 
-        state[i] = Leader /\ LeaderIngestHovercRaftRequest(i, v)
-   
-   \* NetAgg path: Leader sends to NetAgg instead of direct AppendEntries
-   \/ \E i \in Servers : 
-        state[i] = Leader /\ AppendEntriesToNetAgg(i)
+        state[i] = Leader /\ LeaderIngestHovercRaftRequestSendsAppendEntriesToNetAgg(i, v)   
    
    \* NetAgg forwards and collects
 \*   \/ \E f \in Servers, m \in {msg \in ValidMessage(messages) : 
@@ -1082,10 +1219,10 @@ MySwitchPlusPlusNext ==
    
    \* Handle AppendEntriesResponse failing messages that go to leader
    \* to be enabled for point to point recovery todo!
-\*   \/ \E m \in {msg \in ValidMessage(messages) : 
-\*        msg.mtype = AppendEntriesResponse /\ 
-\*        msg.mdest \in Servers /\ state[msg.mdest] = Leader} :
-\*        Receive(m)
+   \/ \E m \in {msg \in ValidMessage(messages) : 
+        msg.mtype = AppendEntriesResponse /\ 
+        msg.mdest \in Servers /\ state[msg.mdest] = Leader} :
+        Receive(m)
       
    \* Leader doesn't use AdvanceCommitIndex in HovercRaft++
    \* Commit advancement happens via AGG_COMMIT
