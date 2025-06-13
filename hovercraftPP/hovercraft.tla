@@ -966,6 +966,7 @@ HandleAppendEntriesRequest(i, j, m) ==
                        mterm           |-> currentTerm[i],
                        msuccess        |-> FALSE,
                        mmatchIndex     |-> IF respondTo = netAggIndex THEN 0 ELSE m.mentryIndex,
+                       mcurrentIndex   |-> Len(log[i]), \* recover from currentIndex + 1 upto matchIndex
                        msource         |-> i,
                        mdest           |-> respondTo],
                        m)
@@ -992,7 +993,7 @@ HandleAppendEntriesRequest(i, j, m) ==
                                  mdest           |-> netAggIndex]
                 IN
                    /\ commitIndex' = [commitIndex EXCEPT ![i] = m.mcommitIndex]
-                   /\ log' = [log EXCEPT ![i] = Append(log[i], m.mentries[1])]
+                   /\ log' = [log EXCEPT ![i] = log[i] \o m.mentries]
                    /\ Reply(message, m) \* Reply directly to NetAgg 
                    
              /\ UNCHANGED <<serverVars, unorderedRequests>>
@@ -1083,7 +1084,7 @@ HandleAppendEntriesResponse(i, j, m) ==
                 /\ Discard(m)                     
        \/ /\ \lnot m.msuccess \* not successful recovery should kick in. Resend AppendEntries with full payload
           /\ LET entryIndex  == m.mmatchIndex
-                 entry == log[i][entryIndex]
+                 entries == SubSeq(log[i], m.mcurrentIndex + 1, entryIndex) \* Get all entries from currentindex to entryIndex
                  prevLogIndex == entryIndex - 1
                  prevLogTerm == IF prevLogIndex > 0 THEN
                                     log[i][prevLogIndex].term
@@ -1092,7 +1093,7 @@ HandleAppendEntriesResponse(i, j, m) ==
                              mterm         |-> currentTerm[i],
                              mprevLogIndex |-> prevLogIndex,
                              mprevLogTerm  |-> prevLogTerm,
-                             mentries      |-> <<entry>>, \* Single entry recovery which includes payload
+                             mentries      |-> entries, \* Multiple entries recovery which includes payload
                              mlog          |-> log[i],
                              mcommitIndex  |-> entryIndex - 1,
                              msource       |-> i,
