@@ -276,7 +276,7 @@ MyConstraint == (\A i \in Servers: currentTerm[i] <= MaxTerm
 InitHistoryVars == voterLog  = [i \in Servers |-> [j \in {} |-> <<>>]]
 
 InitServerVars == /\ currentTerm = [i \in Servers |-> 1]
-                  /\ state       = [i \in Servers |-> Follower]
+\*                  /\ state       = [i \in Servers |-> Follower]
                   /\ votedFor    = [i \in Servers |-> Nil]
 
 InitCandidateVars == /\ votesResponded = [i \in Servers |-> {}]
@@ -377,6 +377,65 @@ MyInit ==
     /\ netAggPendingEntries = {}
     /\ netAggCommitIndex = 0
     /\ Servers = TheServersSet
+    
+    
+MyInitWithElection ==
+    LET ServerSet5 == CHOOSE S \in SUBSET(Server) : Cardinality(S) = 5
+        TheSwitchId == CHOOSE s \in ServerSet5 : TRUE
+        TempSet == ServerSet5 \ {TheSwitchId}
+        TheNetAggId == CHOOSE n \in TempSet : TRUE
+        TempSet2 == TempSet \ {TheNetAggId}
+        TheLeaderId == CHOOSE l \in TempSet2 : TRUE
+        FollowerIds == TempSet2 \ {TheLeaderId}
+
+        TheState == [ s \in Server |->
+                        IF s = TheSwitchId THEN Switch
+                        ELSE IF s = TheNetAggId THEN NetAgg
+                        ELSE Follower
+                    ]
+        TheSwitchIndex == TheSwitchId
+        TheNetAggIndex == TheNetAggId
+        TheServersSet == Server \ {TheSwitchIndex, TheNetAggIndex}
+        Voters == TheServersSet \ {TheLeaderId}
+    IN
+    \* Constraint: Ensure Server has enough elements
+    /\ Cardinality(Server) >= 5
+    /\ PrintT("MyInit: switchIndex=" \o ToString(TheSwitchIndex))
+    /\ PrintT("MyInit: netAggIndex=" \o ToString(TheNetAggIndex))
+\*    /\ PrintT("MyInit: Leader is=" \o ToString(TheLeaderId))
+    /\ PrintT("MyInit: Servers=" \o ToString(TheServersSet))
+    
+    \* Switch initialization
+    /\ switchBuffer = [vt \in {} |-> {}]
+    /\ unorderedRequests = [s \in Server |-> {}]
+    /\ switchSentRecord = [s \in Server |-> {}] 
+    /\ switchIndex = TheSwitchIndex
+    \* NetAgg initialization
+    /\ netAggIndex = TheNetAggIndex
+    /\ netAggMatchIndex = [s \in TheServersSet |-> 0]
+    /\ netAggPendingEntries = {}
+    /\ netAggCommitIndex = 0
+    \* New Servers set without switch and netagg
+    /\ Servers = TheServersSet
+    \* New server states
+    /\ state = TheState
+    
+    /\ messages = [m \in {} |-> 0]
+    /\ InitHistoryVars
+    /\ InitServerVars
+    /\ InitCandidateVars
+    /\ InitLeaderVars
+    /\ InitLogVars
+    /\ maxc = 0
+    /\ leaderCount = [i \in Servers |-> 0]
+    /\ entryCommitStats = [ idx_term \in {} |-> 
+               [ sentCount |-> 0, 
+                 ackCount |-> 0, 
+                 committed |-> FALSE ] ]
+    /\ PrintT("MyInit: Followers=" \o ToString({s \in Servers: state[s] = Follower}))
+    /\ PrintT("MyInit: Leaders=" \o ToString({s \in Servers: state[s] = Leader}))
+    /\ PrintT("MyInit: Candidates=" \o ToString({s \in Servers: state[s] = Candidate}))    
+    
 
 \***********************Define state transitions********************************
 
@@ -390,8 +449,8 @@ Restart(i) ==
     /\ votesResponded' = [votesResponded EXCEPT ![i] = {}]
     /\ votesGranted'   = [votesGranted EXCEPT ![i] = {}]
     /\ voterLog'       = [voterLog EXCEPT ![i] = [j \in {} |-> <<>>]]
-    /\ nextIndex'      = [nextIndex EXCEPT ![i] = [j \in Server |-> 1]]
-    /\ matchIndex'     = [matchIndex EXCEPT ![i] = [j \in Server |-> 0]]
+    /\ nextIndex'      = [nextIndex EXCEPT ![i] = [j \in Servers |-> 1]]
+    /\ matchIndex'     = [matchIndex EXCEPT ![i] = [j \in Servers |-> 0]]
     /\ commitIndex'    = [commitIndex EXCEPT ![i] = 0]
     /\ unorderedRequests' = [unorderedRequests EXCEPT ![i] = {}]
     /\ switchSentRecord' = [switchSentRecord EXCEPT ![i] = {}]
@@ -1166,8 +1225,19 @@ Receive(m) ==
        \/ /\ m.mtype = AppendEntriesRequest
           /\ HandleAppendEntriesRequest(i, j, m)
        \/ /\ m.mtype = AppendEntriesResponse
+          /\ i \in Servers  
           /\ \/ DropStaleResponse(i, j, m)
              \/ HandleAppendEntriesResponse(i, j, m)
+       \/ /\ m.mtype = AppendEntriesResponse
+          /\ i = netAggIndex
+          /\ NetAggHandleAppendEntriesResponse(m)
+       \/ /\ m.mtype = AppendEntriesNetAggRequest
+          /\ i = netAggIndex
+          /\ NetAggForwardAppendEntriesAll(m)
+       \/ /\ m.mtype = AggCommit
+          /\ i \in Servers
+          /\ HandleAggCommit(i, m)
+                    
 
 MySwitchPlusPlusNextOld == 
    \* Switch actions (client request handling)
@@ -1228,6 +1298,7 @@ MySwitchPlusPlusNextOld ==
    \* Leader doesn't use AdvanceCommitIndex in HovercRaft++
    \* Commit advancement happens via AGG_COMMIT
 
+\* -------------------- New  --------------------
 SwitchRcvRequest == 
     \E i \in Servers, v \in Value : 
         state[i] = Leader /\ SwitchClientRequest(switchIndex, i, v)
@@ -1274,16 +1345,27 @@ LeaderRcvRecoveryRequest ==
         msg.mtype = AppendEntriesResponse /\ 
         msg.mdest \in Servers /\ state[msg.mdest] = Leader} :
         Receive(m)
+        
+HandleMessage == \E m \in  ValidMessage(messages) : Receive(m)
 
 MySwitchPlusPlusNext == 
     \/ SwitchRcvRequest
     \/ SwitchReplicateRequest
     \/ LeaderRcvNewRequest
-    \/ NetAggSndAppendEntries
-    \/ FollowersRcvAppendEntries
-    \/ NetAggRcvAppendEntriesResponse
-    \/ ServersRcvAggCommit
-    \/ LeaderRcvRecoveryRequest
+    \/ HandleMessage
+
+MySwitchPlusPlusNextWithElection == 
+    \/ \E i \in Servers : Restart(i)
+    \/ \E i \in Servers : Timeout(i)
+    \/ \E i,j \in Servers : RequestVote(i, j)
+    \/ \E i \in Servers : BecomeLeader(i)
+    \/ SwitchRcvRequest
+    \/ SwitchReplicateRequest
+    \/ LeaderRcvNewRequest
+    \/ \E m \in  ValidMessage(messages) : Receive(m)
+    \/ \E m \in DOMAIN messages : DuplicateMessage(m)
+    \/ \E m \in DOMAIN messages : DropMessage(m)
+
     
 Fairness == 
     /\ WF_vars(SwitchRcvRequest)
@@ -1298,13 +1380,14 @@ Fairness ==
     
 MySwitchPlusPlusSpec == MyInit /\ [][MySwitchPlusPlusNext]_vars
 
-MySwitchPlusPlusFairSpec == MyInit /\ [][MySwitchPlusPlusNext]_vars /\ Fairness
+MySwitchPlusPlusSpec2 == MyInitWithElection /\ [][MySwitchPlusPlusNextWithElection]_vars
+
 
 
 \* -------------------- Invariants --------------------
 
 MoreThanOneLeaderInv ==
-    \A i,j \in Server :
+    \A i,j \in Servers :
         (/\ currentTerm[i] = currentTerm[j]
          /\ state[i] = Leader
          /\ state[j] = Leader)
@@ -1314,7 +1397,7 @@ MoreThanOneLeaderInv ==
 \* From page 8 of the Raft paper: "If two logs contain an entry with the 
 \*same index and term, then the logs are identical in all preceding entries."
 LogMatchingInv ==
-    \A i, j \in Server : i /= j =>
+    \A i, j \in Servers : i /= j =>
         \A n \in 1..min(Len(log[i]), Len(log[j])) :
             log[i][n].term = log[j][n].term =>
             SubSeq(log[i],1,n) = SubSeq(log[j],1,n)
@@ -1323,15 +1406,15 @@ LogMatchingInv ==
 \* leader's log up to the leader's term (since a next Leader may already be
 \* elected without the old leader stepping down yet)
 LeaderCompletenessInv ==
-    \A i \in Server :
+    \A i \in Servers :
         state[i] = Leader =>
-        \A j \in Server : i /= j =>
+        \A j \in Servers : i /= j =>
             CheckIsPrefix(CommittedTermPrefix(j, currentTerm[i]),log[i])
             
     
 \* Committed log entries should never conflict between servers
 LogInv ==
-    \A i, j \in Server :
+    \A i, j \in Servers :
         \/ CheckIsPrefix(Committed(i),Committed(j)) 
         \/ CheckIsPrefix(Committed(j),Committed(i))
 
@@ -1348,14 +1431,14 @@ AllServersHaveOneUnorderedRequestInv ==
     \E s \in Servers :  Cardinality(unorderedRequests[s]) /= 2
 
 \* A leader's maxc should remain under MaxClientRequests
-MaxCInv == (\E i \in Server : state[i] = Leader) => maxc <= MaxClientRequests
+MaxCInv == (\E i \in Servers : state[i] = Leader) => maxc <= MaxClientRequests
 
 \* No server can become leader more than MaxBecomeLeader times
-LeaderCountInv == \E i \in Server : 
+LeaderCountInv == \E i \in Servers : 
   (state[i] = Leader => leaderCount[i] <= MaxBecomeLeader)
 
 \* No server can have a term exceeding MaxTerm
-MaxTermInv == \A i \in Server : currentTerm[i] <= MaxTerm
+MaxTermInv == \A i \in Servers : currentTerm[i] <= MaxTerm
 
 \* Check lower bound for message counts on committed entries
 \* For any entry that has been marked as committed, 
@@ -1390,6 +1473,9 @@ EntryCommitAckQuorumInv ==
 \* fake inv to obtain a trace
 LeaderCommitted ==
     \E i \in Servers : commitIndex[i] /= 2
+
+\* Fake inv to confirm leaders election
+LeaderElected == \A i \in Servers: state[i] /= Leader
 
 NetAggMatchProgress ==
     \E i \in Servers : state[i] = Follower /\ netAggMatchIndex[i] /= 2
