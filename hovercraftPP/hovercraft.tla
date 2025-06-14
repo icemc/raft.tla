@@ -1169,7 +1169,7 @@ Receive(m) ==
           /\ \/ DropStaleResponse(i, j, m)
              \/ HandleAppendEntriesResponse(i, j, m)
 
-MySwitchPlusPlusNext == 
+MySwitchPlusPlusNextOld == 
    \* Switch actions (client request handling)
    \/ \E i \in Servers, v \in Value : 
         state[i] = Leader /\ SwitchClientRequest(switchIndex, i, v)
@@ -1227,8 +1227,78 @@ MySwitchPlusPlusNext ==
       
    \* Leader doesn't use AdvanceCommitIndex in HovercRaft++
    \* Commit advancement happens via AGG_COMMIT
-   
+
+SwitchRcvRequest == 
+    \E i \in Servers, v \in Value : 
+        state[i] = Leader /\ SwitchClientRequest(switchIndex, i, v)
+
+SwitchReplicateRequest == 
+\*   \* Enable this to test normal mode (All requests are sent from switch to followers) 
+\*   \E v \in DOMAIN switchBuffer : 
+\*        SwitchClientRequestReplicateAll(switchIndex, v)
+
+   \* Enable this if you want to test point to point recovery. Note if enabled, the previous one should be disabled
+   \E v \in DOMAIN switchBuffer : 
+        SwitchClientRequestReplicateToLeaderOnly(switchIndex, v)
+        
+
+LeaderRcvNewRequest == 
+    \E i \in Servers, v \in DOMAIN switchBuffer : 
+        state[i] = Leader /\ LeaderIngestHovercRaftRequestSendsAppendEntriesToNetAgg(i, v)
+        
+NetAggSndAppendEntries ==
+    \E m \in {msg \in ValidMessage(messages) : 
+        msg.mtype = AppendEntriesNetAggRequest} : NetAggForwardAppendEntriesAll(m)
+    
+FollowersRcvAppendEntries == 
+    \* Regular message handling (for AppendEntries from NetAgg to followers)
+    \E m \in {msg \in ValidMessage(messages) : 
+        msg.mtype \in {AppendEntriesRequest}} : 
+        Receive(m)
+        
+NetAggRcvAppendEntriesResponse == 
+     \E m \in {msg \in ValidMessage(messages) : 
+        msg.mtype = AppendEntriesResponse /\ 
+        msg.mdest = netAggIndex} :
+        NetAggHandleAppendEntriesResponse(m)
+
+ServersRcvAggCommit ==
+    \* Handle AGG_COMMIT
+    \E i \in Servers, m \in {msg \in ValidMessage(messages) : 
+        msg.mtype = AggCommit} : m.mdest = i /\ HandleAggCommit(i, m)
+        
+LeaderRcvRecoveryRequest == 
+   \* Handle AppendEntriesResponse failing messages that go to leader
+   \* to be enabled for point to point recovery todo!
+   \/ \E m \in {msg \in ValidMessage(messages) : 
+        msg.mtype = AppendEntriesResponse /\ 
+        msg.mdest \in Servers /\ state[msg.mdest] = Leader} :
+        Receive(m)
+
+MySwitchPlusPlusNext == 
+    \/ SwitchRcvRequest
+    \/ SwitchReplicateRequest
+    \/ LeaderRcvNewRequest
+    \/ NetAggSndAppendEntries
+    \/ FollowersRcvAppendEntries
+    \/ NetAggRcvAppendEntriesResponse
+    \/ ServersRcvAggCommit
+    \/ LeaderRcvRecoveryRequest
+    
+Fairness == 
+    /\ WF_vars(SwitchRcvRequest)
+    /\ WF_vars(SwitchReplicateRequest)
+    /\ SF_vars(LeaderRcvNewRequest)
+    /\ SF_vars(NetAggSndAppendEntries)
+    /\ SF_vars(FollowersRcvAppendEntries)
+    /\ SF_vars(NetAggRcvAppendEntriesResponse)
+    /\ SF_vars(ServersRcvAggCommit)
+    /\ SF_vars(LeaderRcvRecoveryRequest)
+    
+    
 MySwitchPlusPlusSpec == MyInit /\ [][MySwitchPlusPlusNext]_vars
+
+MySwitchPlusPlusFairSpec == MyInit /\ [][MySwitchPlusPlusNext]_vars /\ Fairness
 
 
 \* -------------------- Invariants --------------------
